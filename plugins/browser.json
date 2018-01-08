@@ -1,0 +1,21 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        }
+    },
+    "dependent_plugins": {}
+}

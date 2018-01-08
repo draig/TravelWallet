@@ -11,6 +11,8 @@ var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
 });
 
+myApp.addView('.sign-up-view');
+
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");

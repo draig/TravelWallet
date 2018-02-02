@@ -1,20 +1,37 @@
-var app = new Framework7({
-    root: '#app',
-    name: 'TravelWallet',
-    id: 'com.startappsoft.travelwallet',
-    version: '1.0.0',
-    panel: {
-        swipe: 'left',
-    },
+var $$ = Dom7,
+    endpoint = 'https://example.com',
+    db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000);
 
-    routes: [
-        {
-            path: '/about/',
-            url: 'about.html',
+
+var app = new Framework7({
+        root: '#app',
+        name: 'TravelWallet',
+        id: 'com.startappsoft.travelwallet',
+        version: '1.0.0',
+        panel: {
+            swipe: 'left'
         },
-    ],
-    // ... other parameters
-});
+
+        routes: [
+            {
+                path: '/about/',
+                url: './pages/about.html'
+            },
+            {
+                path: '/login-screen/',
+                loginScreen: {
+                    componentUrl: './pages/login-screen.html'
+                }
+            },
+            {
+                path: '/confirmation-screen/',
+                loginScreen: {
+                    componentUrl: './pages/confirmation-screen.html'
+                }
+            }
+        ]
+        // ... other parameters
+    });
 
 var mainView = app.views.create('.view-main');
 
@@ -24,11 +41,11 @@ var view2 = app.views.create('.sign-up-view', {
     routesAdd: [
         {
             path: '/blog/',
-            url: './pages/blog.html',
+            url: './pages/blog.html'
         },
         {
             path: '/post/',
-            url: './pages/post.html',
-        },
-    ],
-})
+            url: './pages/post.html'
+        }
+    ]
+});

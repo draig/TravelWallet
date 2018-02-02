@@ -17,3 +17,7 @@
 input[name="phone"]:before {
     content:"€";
 }
+
+p.text {
+    text-align: center;
+}

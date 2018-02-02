@@ -1,0 +1,66 @@
+<!-- component template -->
+<template>
+    <div class="login-screen confirmation-login-screen">
+        <!-- Default view-page layout -->
+        <div class="view">
+            <div class="page">
+                <!-- page-content has additional login-screen content -->
+                <div class="page-content login-screen-content">
+                    <!-- Login form -->
+                    <form>
+                        <p class="text">Do you receive code?</p>
+
+                        <div class="list no-hairlines-md">
+                            <ul>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-input-wrap">
+                                            <input name="code" type="number" placeholder="enter it here">
+                                            <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="list">
+                            <ul>
+                                <li>
+                                    <a @click="check" class="item-link list-button">Enter Travel Wallet</a>
+                                </li>
+                            </ul>
+                            <div class="block-footer">
+                                Sms with code sent to your number.<br>That can take a few minutes.
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- component styles -->
+<style>
+
+</style>
+<!-- rest of component data and methods -->
+<!--suppress JSAnnotator -->
+<script>
+    // script must return component object
+
+
+    return {
+
+        methods: {
+            check: function () {
+                if(validate()) {
+                    /* app.request.post(endpoint + '/device/confirmation', collectData(), function () {
+                         mainView.navigate(url, options);
+                     });*/
+                    mainView.router.navigate('/about/'); //ToDo: remove this hook
+                    console.log('navigate to main screen');
+                }
+            }
+        }
+    };
+</script>

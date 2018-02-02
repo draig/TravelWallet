@@ -22,12 +22,6 @@ var app = new Framework7({
                 loginScreen: {
                     componentUrl: './pages/login-screen.html'
                 }
-            },
-            {
-                path: '/confirmation-screen/',
-                loginScreen: {
-                    componentUrl: './pages/confirmation-screen.html'
-                }
             }
         ]
         // ... other parameters

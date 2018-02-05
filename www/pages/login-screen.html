@@ -122,19 +122,26 @@
 
         methods: {
             next: function () {
-                if(validatePhone()) {
-                   /* app.request.post(endpoint + '/device', collectPhoneData(), function () {
-                        mainView.navigate(url, options);
-                    });*/
+                if (validatePhone()) {
+                    /* app.request.post(endpoint + '/device', collectPhoneData(), function () {
+                         mainView.navigate(url, options);
+                     });*/
                     toConfirmationStep(); //ToDo move to ajax function
                 }
             },
             check: function () {
-                if(validateConfirmCode()) {
+                if (validateConfirmCode()) {
                     /* app.request.post(endpoint + '/device/confirmation', collectFullData(), function () {
                          mainView.navigate(url, options);
                      });*/
-                    app.loginScreen.get().close(); //ToDo move to ajax function
+                    var fullData = collectFullData();
+                    db.transaction(function (tx) {
+                        tx.executeSql('INSERT INTO users (phone_number, log_in) VALUES (?, ?)', [fullData.phone, true], function (tx, results) {//ToDo insert user_id and device_id
+                            app.loginScreen.get().close(); //ToDo move to ajax function
+                        }, function (error) {
+                            console.log(error);
+                        });
+                    });
                 }
             }
         }

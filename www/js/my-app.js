@@ -43,3 +43,22 @@ var view2 = app.views.create('.sign-up-view', {
         }
     ]
 });
+
+db.transaction(function (tx) {
+    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, device_id, phone_number, log_in)');
+    /*tx.executeSql(sqlStatement, valueArray, function (tx, result) {
+        console.log(result);
+    }, function (error) {
+        console.log(error);
+    });*/
+});
+
+db.transaction(function (tx) {
+    tx.executeSql('SELECT * FROM users WHERE log_in=?', [true], function (tx, results) {
+        if(!results.rows.length) {
+            mainView.router.navigate('/login-screen/');
+        }
+    }, function (error) {
+        console.log(error);
+    });
+});

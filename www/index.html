@@ -33,21 +33,67 @@
                     </div>
                 </div>
 
-                <!-- Toolbar -->
-                <div class="toolbar">
-                    <div class="toolbar-inner">
-                        <!-- Toolbar links -->
-                        <a href="#" class="link">Link 1</a>
-                        <a href="#" class="link">Link 2</a>
-                    </div>
+                <div class="fab fab-right-bottom color-blue">
+                    <a href="#">
+                        <i class="icon f7-icons">+</i>
+                    </a>
                 </div>
 
                 <!-- Scrollable page content -->
                 <div class="page-content">
-                    <p>Page content goes here</p>
-                    <!-- Link to another page -->
-                    <a href="/about/">About app</a>
-                    <a href="/login-screen/">Login Screen</a>
+                    <div class="row">
+                        <div class="col-25"></div>
+                        <div class="col-50">
+                            <p class="segmented segmented-raised">
+                                <button class="button button-active">Active</button>
+                                <button class="button">History</button>
+                            </p>
+                        </div>
+                        <div class="col-25"></div>
+                    </div>
+
+                    <div class="list media-list debts-list">
+                        <ul>
+                            <li class="swipeout">
+                                <div class="swipeout-content">
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title debt-title">Trip to Thailand</div>
+                                                <div class="item-after debt-value">-987$</div>
+                                            </div>
+                                            <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="swipeout-actions-right">
+                                    <a href="#" data-confirm="Are you sure you want to delete this item?" class="swipeout-delete swipeout-overswipe">Delete</a>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#" class="item-link item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title debt-title">Vlad BD</div>
+                                            <div class="item-after debt-value">225$</div>
+                                        </div>
+                                        <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="item-link item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title debt-title">Communal payments</div>
+                                            <div class="item-after debt-value">23 BYN</div>
+                                        </div>
+                                        <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

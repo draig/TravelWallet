@@ -21,3 +21,7 @@ input[name="phone"]:before {
 p.text {
     text-align: center;
 }
+
+.list.media-list.debts-list {
+    margin-top: 0;
+}

@@ -15,6 +15,9 @@
         },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
         }
     },
     "dependent_plugins": {}

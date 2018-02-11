@@ -22,27 +22,16 @@ var app = new Framework7({
                 loginScreen: {
                     componentUrl: './pages/login-screen.html'
                 }
+            },
+            {
+                path: '/debt/new/',
+                url: './pages/debt/new.html'
             }
         ]
         // ... other parameters
     });
 
 var mainView = app.views.create('.view-main');
-
-// This view will support all global routes + own additional routes
-var view2 = app.views.create('.sign-up-view', {
-    // These routes are only available in this view
-    routesAdd: [
-        {
-            path: '/blog/',
-            url: './pages/blog.html'
-        },
-        {
-            path: '/post/',
-            url: './pages/post.html'
-        }
-    ]
-});
 
 db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, device_id, phone_number, log_in)');
@@ -61,4 +50,27 @@ db.transaction(function (tx) {
     }, function (error) {
         console.log(error);
     });
+});
+
+
+// Option 2. Using live 'page:init' event handlers for each page
+$$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
+    function onSuccess(contacts) {
+        alert('Found ' + contacts.length + ' contacts.');
+    };
+
+    function onError(contactError) {
+        alert('onError!');
+    };
+
+// find all contacts with 'Bob' in any name field
+    var options      = new ContactFindOptions();
+    options.filter   = "*";
+    options.multiple = true;
+    options.desiredFields = [navigator.contacts.fieldType.id];
+    options.hasPhoneNumber = true;
+    var fields       = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
+    navigator.contacts.find(fields, onSuccess, onError, options);
+    //console.log('on init');
+    $$('#debug').text('contacts: ' + navigator.contacts);
 });

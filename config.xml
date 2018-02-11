@@ -4,7 +4,7 @@
     <description>
         A basic Framework7 template for PhoneGap.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
+    <author email="andrew.daskhevich@gmail.com" href="http://cordova.io">
         Apache Cordova Team
     </author>
     <content src="index.html" />
@@ -28,4 +28,5 @@
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" spec="~1.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <plugin name="cordova-plugin-contacts" spec="~3.0.1" />
 </widget>

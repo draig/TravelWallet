@@ -16,7 +16,6 @@
 <div class="pages">
     <div data-name="new-debt" class="page">
         <div class="page-content">
-            <p id="debug"></p>
             <div class="block-title">Full Layout / Stacked Labels</div>
             <div class="list no-hairlines-md">
                 <ul>
@@ -29,42 +28,24 @@
                             </div>
                         </div>
                     </li>
+
                     <il id="ptcpnts">
-                        <div class="item-content">
-                            <div class="item-title">Participations</div>
-                        </div>
-                        <div class="ptcpnts-chips block block-strong">
-                            <div class="chip">
-                                <div class="chip-media"><img src="http://lorempixel.com/64/64/people/9/"/></div>
-                                <div class="chip-label">Jane Doe</div>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true"
+                           data-searchbar-placeholder="141 contacts">
+                            <select name="participant" multiple>
+                                <option value="usd">UDS</option>
+                                <option value="eur">EUR</option>
+                                <option value="byn">BYN</option>
+                                <option value="rub">RUB</option>
+                                <option value="kzt">KZT</option>
+                                <option value="uah">UAH</option>
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Participants</div>
+                                </div>
                             </div>
-                            <div class="chip">
-                                <div class="chip-media"><img src="http://lorempixel.com/64/64/people/9/"/></div>
-                                <div class="chip-label">John Doe</div>
-                            </div>
-                            <div class="chip">
-                                <div class="chip-media"><img src="http://lorempixel.com/64/64/people/9/"/></div>
-                                <div class="chip-label">Adam Smith</div>
-                            </div>
-                            <div class="chip">
-                                <div class="chip-media bg-color-pink">J</div>
-                                <div class="chip-label">Jennifer</div>
-                            </div>
-                            <div class="chip">
-                                <div class="chip-media bg-color-yellow text-color-black">C</div>
-                                <div class="chip-label">Chris</div>
-                            </div>
-                            <div class="chip">
-                                <div class="chip-media bg-color-red">K</div>
-                                <div class="chip-label">Kate</div>
-                            </div>
-                        </div>
-                        <div class="ptcpnts-add block block-strong">
-                            <div class="row">
-                                <button class="col button">Add from contacts</button>
-                                <button class="col button">Create</button>
-                            </div>
-                        </div>
+                        </a>
                     </il>
                     <li>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true"
@@ -85,6 +66,13 @@
                         </a>
                     </li>
                 </ul>
+            </div>
+            <div class="row">
+                <div class="col-25"></div>
+                <div class="col-50">
+                    <button class="button">Create</button>
+                </div>
+                <div class="col-25"></div>
             </div>
         </div>
     </div>

@@ -52,8 +52,6 @@ db.transaction(function (tx) {
     });
 });
 
-
-// Option 2. Using live 'page:init' event handlers for each page
 $$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
     function onSuccess(contacts) {
         alert('Found ' + contacts.length + ' contacts.');
@@ -64,13 +62,11 @@ $$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
     };
 
 // find all contacts with 'Bob' in any name field
-    var options      = new ContactFindOptions();
-    options.filter   = "*";
+    var options = new ContactFindOptions();
+    //options.filter   = "Bob";
     options.multiple = true;
     options.desiredFields = [navigator.contacts.fieldType.id];
     options.hasPhoneNumber = true;
-    var fields       = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
+    var fields = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
     navigator.contacts.find(fields, onSuccess, onError, options);
-    //console.log('on init');
-    $$('#debug').text('contacts: ' + navigator.contacts);
 });

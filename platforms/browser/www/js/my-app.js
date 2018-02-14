@@ -25,7 +25,7 @@ var app = new Framework7({
             },
             {
                 path: '/debt/new/',
-                url: './pages/debt/new.html'
+                componentUrl: './pages/debt/new.html'
             }
         ]
         // ... other parameters
@@ -35,11 +35,7 @@ var mainView = app.views.create('.view-main');
 
 db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, device_id, phone_number, log_in)');
-    /*tx.executeSql(sqlStatement, valueArray, function (tx, result) {
-        console.log(result);
-    }, function (error) {
-        console.log(error);
-    });*/
+    tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id, name, phone_number, phones, install_app)');
 });
 
 db.transaction(function (tx) {
@@ -67,6 +63,6 @@ $$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
     options.multiple = true;
     options.desiredFields = [navigator.contacts.fieldType.id];
     options.hasPhoneNumber = true;
-    var fields = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
+    var fields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
     navigator.contacts.find(fields, onSuccess, onError, options);
 });

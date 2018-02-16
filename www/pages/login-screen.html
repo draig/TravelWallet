@@ -124,7 +124,7 @@
             next: function () {
                 if (validatePhone()) {
                     /* app.request.post(endpoint + '/device', collectPhoneData(), function () {
-                         mainView.navigate(url, options);
+                     mainView.navigate(url, options);
                      });*/
                     toConfirmationStep(); //ToDo move to ajax function
                 }
@@ -132,7 +132,7 @@
             check: function () {
                 if (validateConfirmCode()) {
                     /* app.request.post(endpoint + '/device/confirmation', collectFullData(), function () {
-                         mainView.navigate(url, options);
+                     mainView.navigate(url, options);
                      });*/
                     var fullData = collectFullData();
                     db.transaction(function (tx) {

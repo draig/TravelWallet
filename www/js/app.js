@@ -1,6 +1,17 @@
+Framework7.utils.sqlResultSetToArray = function (sqlResult) {
+    var plainResult = [];
+    if(sqlResult && sqlResult.rows && sqlResult.rows.length) {
+        for(var i = 0; i < sqlResult.rows.length; ++i) {
+            plainResult.push(sqlResult.rows.item(i));
+        }
+    }
+    return plainResult;
+};
+
 var $$ = Dom7,
     endpoint = 'https://example.com',
-    db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000);
+    db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000),
+    contacts = [];
 
 
 var app = new Framework7({
@@ -27,7 +38,12 @@ var app = new Framework7({
                 path: '/debt/new/',
                 componentUrl: './pages/debt/new.html'
             }
-        ]
+        ],
+        data: function () {
+            return {
+                contacts: contacts
+            };
+        }
         // ... other parameters
     });
 
@@ -43,6 +59,12 @@ db.transaction(function (tx) {
         if(!results.rows.length) {
             mainView.router.navigate('/login-screen/');
         }
+    }, function (error) {
+        console.log(error);
+    });
+
+    tx.executeSql('SELECT * FROM contacts', [], function (tx, results) {
+        contacts = Framework7.utils.sqlResultSetToArray(results);
     }, function (error) {
         console.log(error);
     });

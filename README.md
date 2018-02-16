@@ -8,6 +8,3 @@ Usage:
     
 ### Plugins: https://build.phonegap.com/plugins
 Contacts: https://www.npmjs.com/package/cordova-plugin-contacts
-
-
-  

@@ -10,7 +10,7 @@
                 </div>
                 <div class="center sliding">New debt book</div>
                 <div class="right">
-                    <a @click="create" href="#" class="back link">
+                    <a @click="create" href="#" class="link">
                         <span>Done</span>
                     </a>
                 </div>
@@ -24,7 +24,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">Title</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="title" placeholder="Debt title">
+                                <input type="text" name="title" required validate placeholder="Debt title">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -34,9 +34,9 @@
                         <a @click="participant" class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
                            data-searchbar-placeholder="141 contacts">
-                            <select name="participant" multiple>
+                            <select name="participant" required validate multiple>
                                 {{#each contacts}}
-                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                    <option value="{{this.contact_id}}" data-option-icon="">{{this.name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -50,7 +50,7 @@
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
                            data-searchbar-placeholder="Currency search">
-                            <select name="currency" multiple>
+                            <select name="currency" required validate multiple>
                                 <option value="usd">UDS</option>
                                 <option value="eur">EUR</option>
                                 <option value="byn">BYN</option>
@@ -83,6 +83,7 @@
         },
         methods: {
             create: function () {
+                console.log(app.input.validateInputs('#new-debt-form'));
                 var formData = app.form.convertToData('#new-debt-form');
                 console.log(formData);
             },

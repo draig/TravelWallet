@@ -10,35 +10,34 @@
                 </div>
                 <div class="center sliding">New debt book</div>
                 <div class="right">
-                    <a href="#" class="link icon-only open-panel"><i class="icon icon-bars"></i></a>
+                    <a @click="create" href="#" class="back link">
+                        <span>Done</span>
+                    </a>
                 </div>
             </div>
         </div>
         <div class="page-content">
             <div class="block-title">Full Layout / Stacked Labels</div>
-            <div class="list no-hairlines-md">
+            <form class="list no-hairlines-md" id="new-debt-form">
                 <ul>
                     <li class="item-content item-input">
                         <div class="item-inner">
                             <div class="item-title item-label">Title</div>
                             <div class="item-input-wrap">
-                                <input type="text" placeholder="Debt title">
+                                <input type="text" name="title" placeholder="Debt title">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
 
                     <il id="ptcpnts">
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
+                        <a @click="participant" class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
                            data-searchbar-placeholder="141 contacts">
                             <select name="participant" multiple>
-                                <option value="usd">UDS</option>
-                                <option value="eur">EUR</option>
-                                <option value="byn">BYN</option>
-                                <option value="rub">RUB</option>
-                                <option value="kzt">KZT</option>
-                                <option value="uah">UAH</option>
+                                {{#each contacts}}
+                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{/each}}
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
@@ -67,14 +66,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
-            <div class="row">
-                <div class="col-25"></div>
-                <div class="col-50">
-                    <button @click="create" class="button">Create</button>
-                </div>
-                <div class="col-25"></div>
-            </div>
+            </form>
         </div>
     </div>
 </template>
@@ -86,10 +78,16 @@
 <!--suppress JSAnnotator -->
 <script>
     return {
+        data: function () {
+            return app.data;
+        },
         methods: {
             create: function () {
-                var formData = app.form.convertToData('#my-form');
+                var formData = app.form.convertToData('#new-debt-form');
                 console.log(formData);
+            },
+            participant: function () {
+                console.log("participant");
             }
         }
     }

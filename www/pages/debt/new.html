@@ -10,7 +10,7 @@
                 </div>
                 <div class="center sliding">New debt book</div>
                 <div class="right">
-                    <a @click="create" href="#" class="link">
+                    <a @click="create" id="new-debt-submit" href="#" class="link link-disabled">
                         <span>Done</span>
                     </a>
                 </div>
@@ -24,19 +24,19 @@
                         <div class="item-inner">
                             <div class="item-title item-label">Title</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="title" required validate placeholder="Debt title">
+                                <input @change="change" type="text" name="title" required validate placeholder="Debt title">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
 
                     <il id="ptcpnts">
-                        <a @click="participant" class="item-link smart-select smart-select-init" data-open-in="popup"
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
                            data-searchbar-placeholder="141 contacts">
-                            <select name="participant" required validate multiple>
+                            <select name="participant" @change="change" required multiple>
                                 {{#each contacts}}
-                                    <option value="{{this.contact_id}}" data-option-icon="">{{this.name}}</option>
+                                    <option value="{{this.contact_id}}">{{this.name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -50,7 +50,7 @@
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
                            data-searchbar-placeholder="Currency search">
-                            <select name="currency" required validate multiple>
+                            <select name="currency" @change="change" required multiple>
                                 <option value="usd">UDS</option>
                                 <option value="eur">EUR</option>
                                 <option value="byn">BYN</option>
@@ -77,18 +77,27 @@
 
 <!--suppress JSAnnotator -->
 <script>
+    function validate() {
+        var formData = app.form.convertToData('#new-debt-form');
+        if(formData.title && formData.currency.length && formData.participant.length) {
+            $$('#new-debt-submit').removeClass('link-disabled');
+        } else {
+            $$('#new-debt-submit').addClass('link-disabled');
+        }
+    }
+
     return {
         data: function () {
             return app.data;
         },
         methods: {
             create: function () {
-                console.log(app.input.validateInputs('#new-debt-form'));
-                var formData = app.form.convertToData('#new-debt-form');
-                console.log(formData);
+                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
+                    app.views.current.router.back();
+                }
             },
-            participant: function () {
-                console.log("participant");
+            change: function () {
+                validate();
             }
         }
     }

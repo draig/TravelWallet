@@ -1,1 +1,3 @@
-var Debt =
+service.debt = (function () {
+
+})();

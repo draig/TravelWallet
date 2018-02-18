@@ -25,3 +25,7 @@ p.text {
 .list.media-list.debts-list {
     margin-top: 0;
 }
+
+.ios a.link.link-disabled {
+    opacity: .3;
+}

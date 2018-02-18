@@ -1,0 +1,109 @@
+<template>
+    <!-- Initial Page, "data-name" contains page name -->
+    <div data-name="debt-list" class="page">
+
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">Travel Wallet</div>
+            </div>
+        </div>
+
+        <div class="fab fab-right-bottom color-blue">
+            <a href="/debt/new/">
+                <i class="icon f7-icons">add</i>
+            </a>
+        </div>
+
+        <!-- Scrollable page content -->
+        <div class="page-content">
+            <div class="row">
+                <div class="col-25"></div>
+                <div class="col-50">
+                    <p class="segmented segmented-raised">
+                        <button class="button button-active">Active</button>
+                        <button class="button">History</button>
+                    </p>
+                </div>
+                <div class="col-25"></div>
+            </div>
+
+            <div class="list media-list debts-list">
+                <ul>
+                    <li class="swipeout">
+                        <div class="swipeout-content">
+                            <a href="#" class="item-link item-content">
+                                <div class="item-inner">
+                                    <div class="item-title-row">
+                                        <div class="item-title debt-title">Trip to Thailand</div>
+                                        <div class="item-after debt-value">-987$</div>
+                                    </div>
+                                    <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                                </div>
+                            </a>
+                        </div>
+                        <div class="swipeout-actions-right">
+                            <a href="#" data-confirm="Are you sure you want to delete this item?" class="swipeout-delete swipeout-overswipe">Delete</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title debt-title">Vlad BD</div>
+                                    <div class="item-after debt-value">225$</div>
+                                </div>
+                                <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title debt-title">Communal payments</div>
+                                    <div class="item-after debt-value">23 BYN</div>
+                                </div>
+                                <!--<div class="item-subtitle">New messages from John Doe</div>-->
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+    function validate() {
+        var formData = app.form.convertToData('#new-debt-form');
+        if(formData.title && formData.currency.length && formData.participant.length) {
+            $$('#new-debt-submit').removeClass('link-disabled');
+        } else {
+            $$('#new-debt-submit').addClass('link-disabled');
+        }
+    }
+
+    return {
+        data: function () {
+            return app.data;
+        },
+        methods: {
+            create: function () {
+                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
+                    service.debt.create(app.form.convertToData('#new-debt-form'), function () {
+                        app.views.current.router.back();
+                    });
+                }
+            },
+            change: function () {
+                validate();
+            }
+        }
+    };
+</script>

@@ -1,51 +1,45 @@
-Framework7.utils.sqlResultSetToArray = function (sqlResult) {
-    var plainResult = [];
-    if(sqlResult && sqlResult.rows && sqlResult.rows.length) {
-        for(var i = 0; i < sqlResult.rows.length; ++i) {
-            plainResult.push(sqlResult.rows.item(i));
-        }
-    }
-    return plainResult;
-};
-
 var $$ = Dom7,
     endpoint = 'https://example.com',
-    db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000),
-    contacts = [];
+    db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000);
 
 
 var app = new Framework7({
-        root: '#app',
-        name: 'TravelWallet',
-        id: 'com.startappsoft.travelwallet',
-        version: '1.0.0',
-        panel: {
-            swipe: 'left'
-        },
+    root: '#app',
+    name: 'TravelWallet',
+    id: 'com.startappsoft.travelwallet',
+    version: '1.0.0',
+    panel: {
+        swipe: 'left'
+    },
 
-        routes: [
-            {
-                path: '/about/',
-                url: './pages/about.html'
-            },
-            {
-                path: '/login-screen/',
-                loginScreen: {
-                    componentUrl: './pages/login-screen.html'
-                }
-            },
-            {
-                path: '/debt/new/',
-                componentUrl: './pages/debt/new.html'
+    routes: [
+        {
+            path: '/about/',
+            url: './pages/about.html'
+        },
+        {
+            path: '/login-screen/',
+            loginScreen: {
+                componentUrl: './pages/login-screen.html'
             }
-        ],
-        data: function () {
-            return {
-                contacts: contacts
-            };
+        },
+        {
+            path: '/debt/list/',
+            componentUrl: './pages/debt/list.html'
+        },
+        {
+            path: '/debt/new/',
+            componentUrl: './pages/debt/new.html'
         }
-        // ... other parameters
-    });
+    ],
+    data: function () {
+        return {
+            contacts: [],
+            debts: [],
+            archived_debts: []
+        };
+    }
+});
 
 var mainView = app.views.create('.view-main');
 
@@ -65,12 +59,73 @@ db.transaction(function (tx) {
         console.log(error);
     });
 
+
     tx.executeSql('SELECT * FROM contacts', [], function (tx, results) {
-        contacts = Framework7.utils.sqlResultSetToArray(results);
+        contacts = utils.sqlResultSetToArray(results);
     }, function (error) {
         console.log(error);
     });
 });
+
+
+
+function initAppData() {
+    var initTaskCount = 2;
+
+    function finish() {
+        --initTaskCount;
+        if(!initTaskCount) {
+            app.views.current.router.navigate('/debt/list/', {
+                animate: false
+            });
+        }
+    }
+
+    service.contact.list(function (contacts) {
+        app.data.contacts = contacts;
+        finish();
+    });
+
+    service.debt.list('active', function (debts) {
+        app.data.debts = debts;
+        finish();
+    });
+}
+
+$$(document).on('page:init', '.page[data-name="init"]', function (e) {
+    initAppData();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
     function onSuccess(contacts) {

@@ -29,3 +29,13 @@ p.text {
 .ios a.link.link-disabled {
     opacity: .3;
 }
+
+.page[data-name="init"] .page-content {
+    text-align: center;
+}
+
+.page[data-name="init"] .preloader {
+    position: absolute;
+    top: 50%;
+    margin-top: -22px;
+}

@@ -93,8 +93,12 @@
         methods: {
             create: function () {
                 if(!$$('#new-debt-submit').hasClass('link-disabled')) {
-                    service.debt.create(app.form.convertToData('#new-debt-form'), function () {
-                        app.views.current.router.back();
+                    service.debt.create(app.form.convertToData('#new-debt-form'), function (result) {
+                        app.data.debts.push(result);
+                        app.views.current.router.navigate('/debt/list/', {
+                            reloadCurrent: true,
+                            ignoreCache: true
+                        });
                     });
                 }
             },

@@ -13,3 +13,10 @@ db.transaction(function (tx) {
     tx.executeSql('INSERT INTO contacts (contact_id, name, phone_number, phones, install_app) VALUES (?, ?, ?, ?, ?)', ['1', 'Andrei Dahskevich', '+375447604989', '+375447604989', true]);
     tx.executeSql('INSERT INTO contacts (contact_id, name, phone_number, phones, install_app) VALUES (?, ?, ?, ?, ?)', ['2', 'Ivan Ivanov', '+375296230945', '+375296230945,+3752328798765', true]);
 });
+
+Trip to Thailand
+Vlad BD
+Communal payments
+
+lodash (https://www.jsdelivr.com/package/npm/lodash)  
+remove.js

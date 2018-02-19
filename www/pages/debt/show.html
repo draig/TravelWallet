@@ -1,10 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<template>
+    <div data-name="debt-list" class="page">
+        <div class="navbar debt-list-navbar">
+            <div class="navbar-inner">
+                <div class="title">Travel Wallet</div>
+            </div>
+        </div>
 
-</body>
-</html>
+        <div class="fab fab-right-bottom color-blue">
+            <a href="/debt/new/">
+                <i class="icon f7-icons">add</i>
+            </a>
+        </div>
+
+        <!-- Scrollable page content -->
+        <div class="page-content">
+            <div class="toolbar tabbar">
+                <div class="toolbar-inner">
+                    <a href="#tab-1" class="tab-link tab-link-active">Tab 1</a>
+                    <a href="#tab-2" class="tab-link">Tab 2</a>
+                    <a href="#tab-3" class="tab-link">Tab 3</a>
+                </div>
+            </div>
+            <div class="tabs-swipeable-wrap">
+                <div class="tabs">
+                    <div id="tab-1" class="page-content tab tab-active">
+                        <div class="block">
+                            <p>Tab 1 content</p>
+                            ...
+                        </div>
+                    </div>
+                    <div id="tab-2" class="page-content tab">
+                        <div class="block">
+                            <p>Tab 2 content</p>
+                            ...
+                        </div>
+                    </div>
+                    <div id="tab-3" class="page-content tab">
+                        <div class="block">
+                            <p>Tab 3 content</p>
+                            ...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+    .page[data-name="debt-list"] ul {
+        margin: 35px 0;
+    }
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+    $$(document).on('page:afterin', '.page[data-name="debt-list"]', function (e) {
+        $$('.page[data-name="debt-list"] .swipeout').on('swipeout:deleted', function () {
+            service.debt.archive($$(this).data('debt-id'));
+        });
+    });
+
+    return {
+        data: function () {
+            return app.data;
+        },
+        methods: {
+            data: function () {
+                return app.data;
+            },
+            create: function () {
+                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
+                    service.debt.create(app.form.convertToData('#new-debt-form'), function () {
+                        app.views.current.router.back();
+                    });
+                }
+            },
+            change: function () {
+                validate();
+            }
+        }
+    };
+</script>

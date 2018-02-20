@@ -14,10 +14,6 @@ var app = new Framework7({
 
     routes: [
         {
-            path: '/about/',
-            url: './pages/about.html'
-        },
-        {
             path: '/login-screen/',
             loginScreen: {
                 componentUrl: './pages/login-screen.html'
@@ -30,6 +26,10 @@ var app = new Framework7({
         {
             path: '/debt/new/',
             componentUrl: './pages/debt/new.html'
+        },
+        {
+            path: '/debt/show/:debt_id/',
+            componentUrl: './pages/debt/show.html'
         }
     ],
     data: function () {

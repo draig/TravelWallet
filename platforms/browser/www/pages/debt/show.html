@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<template>
+    <div data-name="debt-show" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span>Back</span>
+                    </a>
+                </div>
+                <div class="center sliding">Debt</div>
+            </div>
+        </div>
 
-</body>
-</html>
+        <div class="toolbar tabbar">
+            <div class="toolbar-inner">
+                <a href="#tab-1" class="tab-link tab-link-active">Payments</a>
+                <a href="#tab-2" class="tab-link">Debts</a>
+            </div>
+        </div>
+        <div class="tabs-swipeable-wrap">
+            <div class="tabs">
+                <div id="tab-1" class="page-content tab tab-active">
+                    <ul>
+                        <li>
+                            <div class="media"><img src="http://lorempixel.com/160/160/people/1" width="80"/></div>
+                            <div class="title">Pay in 7/11</div>
+                            <div>
+                                <div>divide with:</div>
+                                <div>5 people</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="tab-2" class="page-content tab">
+                    <div class="block">
+                        <p>Debts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+    return {
+
+    };
+</script>

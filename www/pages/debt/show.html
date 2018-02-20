@@ -1,45 +1,40 @@
 <template>
-    <div data-name="debt-list" class="page">
-        <div class="navbar debt-list-navbar">
+    <div data-name="debt-show" class="page">
+        <div class="navbar">
             <div class="navbar-inner">
-                <div class="title">Travel Wallet</div>
-            </div>
-        </div>
-
-        <div class="fab fab-right-bottom color-blue">
-            <a href="/debt/new/">
-                <i class="icon f7-icons">add</i>
-            </a>
-        </div>
-
-        <!-- Scrollable page content -->
-        <div class="page-content">
-            <div class="toolbar tabbar">
-                <div class="toolbar-inner">
-                    <a href="#tab-1" class="tab-link tab-link-active">Tab 1</a>
-                    <a href="#tab-2" class="tab-link">Tab 2</a>
-                    <a href="#tab-3" class="tab-link">Tab 3</a>
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span>Back</span>
+                    </a>
                 </div>
+                <div class="center sliding">Debt</div>
             </div>
-            <div class="tabs-swipeable-wrap">
-                <div class="tabs">
-                    <div id="tab-1" class="page-content tab tab-active">
-                        <div class="block">
-                            <p>Tab 1 content</p>
-                            ...
-                        </div>
-                    </div>
-                    <div id="tab-2" class="page-content tab">
-                        <div class="block">
-                            <p>Tab 2 content</p>
-                            ...
-                        </div>
-                    </div>
-                    <div id="tab-3" class="page-content tab">
-                        <div class="block">
-                            <p>Tab 3 content</p>
-                            ...
-                        </div>
+        </div>
+
+        <div class="toolbar tabbar">
+            <div class="toolbar-inner">
+                <a href="#tab-1" class="tab-link tab-link-active">Payments</a>
+                <a href="#tab-2" class="tab-link">Debts</a>
+            </div>
+        </div>
+        <div class="tabs-swipeable-wrap">
+            <div class="tabs">
+                <div id="tab-1" class="page-content tab tab-active">
+                    <ul>
+                        <li>
+                            <div class="media"><img src="http://lorempixel.com/160/160/people/1" width="80"/></div>
+                            <div class="title">Pay in 7/11</div>
+                            <div>
+                                <div>divide with:</div>
+                                <div>5 people</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="tab-2" class="page-content tab">
+                    <div class="block">
+                        <p>Debts</p>
                     </div>
                 </div>
             </div>
@@ -48,37 +43,12 @@
 </template>
 
 <style>
-    .page[data-name="debt-list"] ul {
-        margin: 35px 0;
-    }
+
 </style>
 
 <!--suppress JSAnnotator -->
 <script>
-    $$(document).on('page:afterin', '.page[data-name="debt-list"]', function (e) {
-        $$('.page[data-name="debt-list"] .swipeout').on('swipeout:deleted', function () {
-            service.debt.archive($$(this).data('debt-id'));
-        });
-    });
-
     return {
-        data: function () {
-            return app.data;
-        },
-        methods: {
-            data: function () {
-                return app.data;
-            },
-            create: function () {
-                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
-                    service.debt.create(app.form.convertToData('#new-debt-form'), function () {
-                        app.views.current.router.back();
-                    });
-                }
-            },
-            change: function () {
-                validate();
-            }
-        }
+
     };
 </script>

@@ -18,26 +18,47 @@
                 <a href="#tab-2" class="tab-link">Debts</a>
             </div>
         </div>
+
         <div class="tabs-swipeable-wrap">
             <div class="tabs">
                 <div id="tab-1" class="page-content tab tab-active">
-                    <ul class="payment-list">
-                        <li>
-                            <div class="payment-block payment-media"><img src="img/ava.png" width="70"/></div>
-                            <div class="payment-block payment-body">
-                                <div class="payment-title">Pay in 7/11</div>
-                                <div class="payment-details">
-                                    <div class="payment-dw-title">divide with:</div>
-                                    <div class="payment-dw-details">5 people</div>
-                                </div>
-                            </div>
-                            <div class="payment-block payment-value">25$</div>
-                        </li>
-                    </ul>
+                    <div class="list media-list payment-list">
+                        <ul>
+                            <li>
+                                <a href="#" class="item-link item-content">
+                                    <div class="item-media"><img src="img/ava.png" width="80"/></div>
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">Yellow Submarine</div>
+                                            <div class="item-after">$15</div>
+                                        </div>
+                                        <div class="item-text">divide with:</div>
+                                        <div class="item-subtitle">5 people</div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="tab-2" class="page-content tab">
-                    <div class="block">
-                        <p>Debts</p>
+                    <div class="list media-list debt-list">
+                        <ul>
+                            <li>
+                                <a href="#" class="item-link item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-subtitle">
+                                                <span class="person">Andrei Dashkevich</span>
+                                                <span class="owe-separator">owe to</span>
+                                                <span class="person">Ivan Ivanov</span></div>
+                                        </div>
+                                        <div class="item-row">
+                                            <div class="item-title">200$</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -46,62 +67,14 @@
 </template>
 
 <style>
-    ul.payment-list {
-        padding: 0;
-        background-color: white;
-    }
-
-    ul.payment-list li {
-        position: relative;
-        height: 80px;
-    }
-
-    li .payment-block {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-    }
-
-    .payment-list .payment-media {
-        left: 0;
-        padding: 5px 10px;
-    }
-
-    .payment-media img {
+    .payment-list .item-media img {
         border-radius: 50%;
     }
-
-    .payment-list .payment-body {
-        padding: 0 50px 0 95px;
-        left: 0;
-        right: 0;
+    .person {
+        font-weight: 600;
     }
-
-    .payment-body .payment-title{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 17px;
-        line-height: 1.4;
-        padding-top: 6px
-    }
-
-    .payment-list .payment-value {
-        right: 0;
-        width: 40px;
-        padding-right: 10px;
-        line-height: 80px;
-    }
-
-    .payment-details {
-        position: absolute;
-        bottom: 0;
-        padding-bottom: 6px;
-    }
-
-    .payment-details .payment-dw-title{
-        color: #6d6d72;
-        font-size: 13px;
+    .owe-separator {
+        color: #8e8e93;
     }
 </style>
 

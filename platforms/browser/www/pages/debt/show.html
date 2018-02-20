@@ -21,14 +21,17 @@
         <div class="tabs-swipeable-wrap">
             <div class="tabs">
                 <div id="tab-1" class="page-content tab tab-active">
-                    <ul>
+                    <ul class="payment-list">
                         <li>
-                            <div class="media"><img src="http://lorempixel.com/160/160/people/1" width="80"/></div>
-                            <div class="title">Pay in 7/11</div>
-                            <div>
-                                <div>divide with:</div>
-                                <div>5 people</div>
+                            <div class="payment-block payment-media"><img src="img/ava.png" width="70"/></div>
+                            <div class="payment-block payment-body">
+                                <div class="payment-title">Pay in 7/11</div>
+                                <div class="payment-details">
+                                    <div class="payment-dw-title">divide with:</div>
+                                    <div class="payment-dw-details">5 people</div>
+                                </div>
                             </div>
+                            <div class="payment-block payment-value">25$</div>
                         </li>
                     </ul>
                 </div>
@@ -43,7 +46,63 @@
 </template>
 
 <style>
+    ul.payment-list {
+        padding: 0;
+        background-color: white;
+    }
 
+    ul.payment-list li {
+        position: relative;
+        height: 80px;
+    }
+
+    li .payment-block {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+    }
+
+    .payment-list .payment-media {
+        left: 0;
+        padding: 5px 10px;
+    }
+
+    .payment-media img {
+        border-radius: 50%;
+    }
+
+    .payment-list .payment-body {
+        padding: 0 50px 0 95px;
+        left: 0;
+        right: 0;
+    }
+
+    .payment-body .payment-title{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 17px;
+        line-height: 1.4;
+        padding-top: 6px
+    }
+
+    .payment-list .payment-value {
+        right: 0;
+        width: 40px;
+        padding-right: 10px;
+        line-height: 80px;
+    }
+
+    .payment-details {
+        position: absolute;
+        bottom: 0;
+        padding-bottom: 6px;
+    }
+
+    .payment-details .payment-dw-title{
+        color: #6d6d72;
+        font-size: 13px;
+    }
 </style>
 
 <!--suppress JSAnnotator -->

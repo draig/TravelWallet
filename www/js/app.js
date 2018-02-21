@@ -47,7 +47,7 @@ db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, device_id, phone_number, log_in)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id, name, phone_number, phones, install_app)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, last_synch)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS payment (payment_id, title, currency, payer, participant, synch)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, currency, payer, participant, synch)');
 });
 
 db.transaction(function (tx) {

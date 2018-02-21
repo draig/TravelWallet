@@ -5,6 +5,7 @@ service.debt = (function () {
     };
 
     return {
+
         create: function (data, success, error) {
             var debtData = [
                 utils.uuid(),
@@ -15,12 +16,15 @@ service.debt = (function () {
                 status.ACTIVE,
                 0
             ];
-
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO debts (debt_id, title, currency, participant, owe, status, last_synch) VALUES (?, ?, ?, ?, ?, ?, ?)', debtData, function (tx, results) {
                     var result = app.utils.extend(data, {
+                        debt_id: debtData[0],
                         currency: [],
-                        participant: []
+                        participant: [],
+                        owe: debtData[4],
+                        status: debtData[5],
+                        last_synch: debtData[6]
                     });
                     success && success(result);
                 }, function (e) {

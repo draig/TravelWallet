@@ -48,6 +48,12 @@ db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id, name, phone_number, phones, install_app)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, last_synch)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, currency, payer, participant, synch)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS currencies (currensy_id unique, title, sign)');
+});
+
+db.transaction(function (tx) {
+    //tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`usd`, `UDS`, `$`)');
+    //tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`usd`, `UDS`, `$`)');
 });
 
 db.transaction(function (tx) {

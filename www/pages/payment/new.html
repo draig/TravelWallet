@@ -1,5 +1,5 @@
 <template>
-    <div data-name="new-debt" class="page">
+    <div data-name="payment-new" class="page">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="left">
@@ -8,22 +8,32 @@
                         <span>Back</span>
                     </a>
                 </div>
-                <div class="title">New debt book</div>
+                <div class="title">New payment</div>
                 <div class="right">
-                    <a @click="create" id="new-debt-submit" href="#" class="link link-disabled">
+                    <a @click="create" id="payment-new-submit" href="#" class="link link-disabled">
                         <span>Done</span>
                     </a>
                 </div>
             </div>
         </div>
         <div class="page-content">
-            <form class="list no-hairlines-md" id="new-debt-form">
+            <form class="list no-hairlines-md" id="payment-new-form">
                 <ul>
                     <li class="item-content item-input">
                         <div class="item-inner">
                             <div class="item-title item-label">Title</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="text" name="title" required validate placeholder="Debt title">
+                                <input @change="change" type="nu" name="title" required validate placeholder="Payment title">
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Title</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="number" name="amount" required validate placeholder="Amount">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -35,7 +45,7 @@
                            data-searchbar-placeholder="141 contacts">
                             <select name="participant" @change="change" required multiple>
                                 {{#each contacts}}
-                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                <option value="{{this.contact_id}}">{{this.name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">

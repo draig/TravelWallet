@@ -36,7 +36,8 @@ var app = new Framework7({
         return {
             contacts: [],
             debts: [],
-            archived_debts: []
+            archived_debts: [],
+            currencies: []
         };
     }
 });
@@ -52,8 +53,12 @@ db.transaction(function (tx) {
 });
 
 db.transaction(function (tx) {
-    //tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`usd`, `UDS`, `$`)');
-    //tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`usd`, `UDS`, `$`)');
+    tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`usd`, `UDS`, `$`)');
+    tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`eur`, `EUR`, `€`)');
+    tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`byn`, `BYN`, ``)');
+    tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`rub`, `RUB`, `₽`)');
+    tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`kzt`, `KZT`, `₽`)');
+    tx.executeSql('INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES (`uah`, `UAH`, ``)');
 });
 
 db.transaction(function (tx) {
@@ -64,19 +69,12 @@ db.transaction(function (tx) {
     }, function (error) {
         console.log(error);
     });
-
-
-    tx.executeSql('SELECT * FROM contacts', [], function (tx, results) {
-        contacts = utils.sqlResultSetToArray(results);
-    }, function (error) {
-        console.log(error);
-    });
 });
 
 
 
 function initAppData() {
-    var initTaskCount = 2;
+    var initTaskCount = 3;
 
     function finish() {
         --initTaskCount;
@@ -86,6 +84,11 @@ function initAppData() {
             });
         }
     }
+
+    service.currency.list(function (currencies) {
+        app.data.currencies = currencies;
+        finish();
+    });
 
     service.contact.list(function (contacts) {
         app.data.contacts = contacts;

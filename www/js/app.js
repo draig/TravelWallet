@@ -74,30 +74,26 @@ db.transaction(function (tx) {
 
 
 function initAppData() {
-    var initTaskCount = 3;
 
-    function finish() {
-        --initTaskCount;
-        if(!initTaskCount) {
-            app.views.current.router.navigate('/debt/list/', {
-                animate: false
-            });
-        }
-    }
-
-    service.currency.list(function (currencies) {
+    service.init.add(service.currency.list, function (currencies) {
         app.data.currencies = currencies;
-        finish();
-    });
+        service.init.finish('currency');
+    }, 'currency');
 
-    service.contact.list(function (contacts) {
-        app.data.contacts = contacts;
-        finish();
-    });
+    service.init.add(service.contact.list, function (contact) {
+        app.data.contact = contact;
+        service.init.finish('contact');
+    }, 'contact');
 
-    service.debt.list('active', function (debts) {
+    service.init.add(service.debt.list, ['active', function (debts) {
         app.data.debts = debts;
-        finish();
+        service.init.finish();
+    }], ['currency', 'contact']);
+
+    service.init.start(function () {
+        app.views.current.router.navigate('/debt/list/', {
+            animate: false
+        });
     });
 }
 

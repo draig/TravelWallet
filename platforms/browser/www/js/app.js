@@ -99,7 +99,7 @@ function initAppData() {
                 animate: false
             });
         } else {
-            mainView.router.navigate('/login-screen/', {
+            app.views.current.router.navigate('/login-screen/', {
                 animate: false
             });
         }

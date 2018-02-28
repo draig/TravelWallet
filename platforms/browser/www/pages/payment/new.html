@@ -18,12 +18,13 @@
         </div>
         <div class="page-content">
             <form class="list no-hairlines-md" id="payment-new-form">
+                <input type="hidden" name="debt_id" value="{{$route.params.debt_id}}">
                 <ul>
                     <li class="item-content item-input">
                         <div class="item-inner">
                             <div class="item-title item-label">Title</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="nu" name="title" required validate placeholder="Payment title">
+                                <input @change="change" type="text" name="title" required validate placeholder="Payment title">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -31,21 +32,35 @@
 
                     <li class="item-content item-input">
                         <div class="item-inner">
-                            <div class="item-title item-label">Title</div>
+                            <div class="item-title item-label">Amount</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="number" name="amount" required validate placeholder="Amount">
+                                <input @change="change" type="number" name="amount" required validate placeholder="Payment amount">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
 
-                    <il id="ptcpnts">
+                    <li>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup">
+                            <select name="currency" @change="change" required>
+                                {{#each currencies}}
+                                    <option value="{{this.currency_id}}">{{this.title}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Currency</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
-                           data-searchbar="true"
-                           data-searchbar-placeholder="141 contacts">
-                            <select name="participant" @change="change" required multiple>
+                           data-searchbar="true" data-searchbar-placeholder="141 contacts">
+                            <select name="payer" @change="change" required>
                                 {{#each contacts}}
-                                <option value="{{this.contact_id}}">{{this.name}}</option>
+                                    <option value="{{this.contact_id}}">{{this.name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -55,25 +70,22 @@
                             </div>
                         </a>
                     </il>
-                    <li>
+
+                    <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
-                           data-searchbar="true"
-                           data-searchbar-placeholder="Currency search">
-                            <select name="currency" @change="change" required multiple>
-                                <option value="usd">UDS</option>
-                                <option value="eur">EUR</option>
-                                <option value="byn">BYN</option>
-                                <option value="rub">RUB</option>
-                                <option value="kzt">KZT</option>
-                                <option value="uah">UAH</option>
+                           data-searchbar="true" data-searchbar-placeholder="141 contacts">
+                            <select name="participant" @change="change" required multiple>
+                                {{#each contacts}}
+                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{/each}}
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
-                                    <div class="item-title">Currency</div>
+                                    <div class="item-title">Participants</div>
                                 </div>
                             </div>
                         </a>
-                    </li>
+                    </il>
                 </ul>
             </form>
         </div>
@@ -87,28 +99,33 @@
 <!--suppress JSAnnotator -->
 <script>
     function validate() {
-        var formData = app.form.convertToData('#new-debt-form');
-        if(formData.title && formData.currency.length && formData.participant.length) {
-            $$('#new-debt-submit').removeClass('link-disabled');
+        var formData = app.form.convertToData('#payment-new-form');
+        if(formData.title && formData.amount && formData.currency && formData.participant.length && formData.payer) {
+            $$('#payment-new-submit').removeClass('link-disabled');
         } else {
-            $$('#new-debt-submit').addClass('link-disabled');
+            $$('#payment-new-submit').addClass('link-disabled');
         }
     }
 
     return {
         data: function () {
-            return app.data;
+            var debt = service.debt.get(this.$route.params.debt_id);
+            return {
+                currencies: service.currency.getByIds(debt.currency),
+                contacts: service.contact.getByIds(debt.participant)
+            };
         },
         methods: {
             create: function () {
-                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
-                    service.debt.create(app.form.convertToData('#new-debt-form'), function (result) {
-                        app.data.debts.push(result);
-                        app.views.current.router.navigate('/debt/list/', {
+                if(!$$('#payment-new-submit').hasClass('link-disabled')) {
+                    service.payment.create(app.form.convertToData('#payment-new-form'), function (result) {
+                        app.data.payments.push(result);
+                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', this.$route.params.debt_id), {
                             reloadCurrent: true,
-                            ignoreCache: true
+                            ignoreCache: true,
+                            history: false
                         });
-                    });
+                    }.bind(this));
                 }
             },
             change: function () {

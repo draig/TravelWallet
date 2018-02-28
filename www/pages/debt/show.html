@@ -3,14 +3,14 @@
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="left">
-                    <a href="#" class="back link">
+                    <a href="/debt/list/" class="back link">
                         <i class="icon icon-back"></i>
                         <span>Back</span>
                     </a>
                 </div>
                 <div class="title">Debt</div>
                 <div class="right">
-                    <a href="#" class="back link">
+                    <a href="/payment/new/{{$route.params.debt_id}}/" class="link">
                         <i class="icon f7-icons">add</i>
                     </a>
                 </div>
@@ -29,19 +29,21 @@
                 <div id="tab-1" class="page-content tab tab-active">
                     <div class="list media-list payment-list">
                         <ul>
-                            <li>
-                                <a href="#" class="item-link item-content">
-                                    <div class="item-media"><img src="img/ava.png" width="80"/></div>
-                                    <div class="item-inner">
-                                        <div class="item-title-row">
-                                            <div class="item-title">Yellow Submarine</div>
-                                            <div class="item-after">$15</div>
+                            {{#each payments}}
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><img src="img/ava.png" width="80"/></div>
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">{{this.title}}</div>
+                                                <div class="item-after">${{this.amount}}</div>
+                                            </div>
+                                            <div class="item-text">divide with:</div>
+                                            <div class="item-subtitle">5 people</div>
                                         </div>
-                                        <div class="item-text">divide with:</div>
-                                        <div class="item-subtitle">5 people</div>
-                                    </div>
-                                </a>
-                            </li>
+                                    </a>
+                                </li>
+                            {{/each}}
                         </ul>
                     </div>
                 </div>
@@ -86,6 +88,10 @@
 <!--suppress JSAnnotator -->
 <script>
     return {
-
+        data: function () {
+            return {
+                payments: service.payment.getByDebtId(this.$route.params.debt_id)
+            }
+        }
     };
 </script>

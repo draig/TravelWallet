@@ -20,8 +20,8 @@ service.debt = (function () {
                 tx.executeSql('INSERT INTO debts (debt_id, title, currency, participant, owe, status, last_synch) VALUES (?, ?, ?, ?, ?, ?, ?)', debtData, function (tx, results) {
                     var result = app.utils.extend(data, {
                         debt_id: debtData[0],
-                        currency: [],
-                        participant: [],
+                        //currency: [],
+                        //participant: [],
                         owe: debtData[4],
                         status: debtData[5],
                         last_synch: debtData[6]
@@ -33,10 +33,21 @@ service.debt = (function () {
             });
         },
 
+        get: function (debt_id) {
+            return app.data.debts.find(function (debt) {
+                return debt.debt_id === debt_id;
+            });
+        },
+
         list: function (status, success, error) {
             db.transaction(function (tx) {
                 tx.executeSql('SELECT * FROM debts WHERE status=?', [status], function (tx, results) {
-                    success && success(utils.sqlResultSetToArray(results));
+                    var debts = utils.sqlResultSetToArray(results);
+                    debts.forEach(function (debt) {
+                        debt.participant = debt.participant.split(',');
+                        debt.currency = debt.currency.split(',');
+                    });
+                    success && success(debts);
                 }, function (e) {
                     error && error(e);
                 });

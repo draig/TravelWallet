@@ -12,6 +12,12 @@ service.contact = (function () {
                     error && error(e);
                 });
             });
+        },
+
+        getByIds: function (ids) {
+            return app.data.contacts.filter(function (contact) {
+                return ids.indexOf(contact.contact_id) !== -1;
+            });
         }
     }
 })();

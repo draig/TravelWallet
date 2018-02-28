@@ -10,6 +10,12 @@ service.currency = (function () {
                     error && error(e);
                 });
             });
+        },
+
+        getByIds: function (ids) {
+            return app.data.currencies.filter(function (currency) {
+                return ids.indexOf(currency.currency_id) !== -1;
+            });
         }
     }
 })();

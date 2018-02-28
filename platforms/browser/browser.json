@@ -4,7 +4,18 @@
         "uninstalled": []
     },
     "config_munge": {
-        "files": {}
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"browser-package\" value=\"Device\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
     },
     "installed_plugins": {
         "cordova-plugin-whitelist": {
@@ -17,6 +28,9 @@
             "PACKAGE_NAME": "com.startupsoft.travelwallet"
         },
         "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        },
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "com.startupsoft.travelwallet"
         }
     },
@@ -114,12 +128,27 @@
             "merges": [
                 "navigator.contacts"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-device/www/device.js",
+            "id": "cordova-plugin-device.device",
+            "pluginId": "cordova-plugin-device",
+            "clobbers": [
+                "device"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-device/src/browser/DeviceProxy.js",
+            "id": "cordova-plugin-device.DeviceProxy",
+            "pluginId": "cordova-plugin-device",
+            "runs": true
         }
     ],
     "plugin_metadata": {
         "cordova-plugin-whitelist": "1.2.2",
         "cordova-plugin-console": "1.0.7",
         "cordova-plugin-statusbar": "1.0.1",
-        "cordova-plugin-contacts": "3.0.1"
+        "cordova-plugin-contacts": "3.0.1",
+        "cordova-plugin-device": "2.0.1"
     }
 }

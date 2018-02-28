@@ -138,6 +138,7 @@
                     db.transaction(function (tx) {
                         tx.executeSql('INSERT INTO users (phone_number, log_in) VALUES (?, ?)', [fullData.phone, true], function (tx, results) {//ToDo insert user_id and device_id
                             app.loginScreen.get().close(); //ToDo move to ajax function
+                            //app.views.current.router.navigate('/debt/list/');
                         }, function (error) {
                             console.log(error);
                         });

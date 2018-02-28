@@ -17,6 +17,3 @@ db.transaction(function (tx) {
 Trip to Thailand
 Vlad BD
 Communal payments
-
-lodash (https://www.jsdelivr.com/package/npm/lodash)  
-remove.js

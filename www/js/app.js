@@ -66,18 +66,6 @@ db.transaction(function (tx) {
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('uah', 'UAH', '')");
 });
 
-db.transaction(function (tx) {
-    tx.executeSql('SELECT * FROM users WHERE log_in=?', [true], function (tx, results) {
-        if(!results.rows.length) {
-            mainView.router.navigate('/login-screen/');
-        }
-    }, function (error) {
-        console.log(error);
-    });
-});
-
-
-
 function initAppData() {
 
     service.init.add(service.currency.list, function (currencies) {
@@ -100,10 +88,21 @@ function initAppData() {
         service.init.finish();
     }], ['currency', 'contact', 'payments']);
 
+    service.init.add(service.user.getLogIn, function (user) {
+        app.data.user = user;
+        service.init.finish('user');
+    }, 'user');
+
     service.init.start(function () {
-        app.views.current.router.navigate('/debt/list/', {
-            animate: false
-        });
+        if (app.data.user) {
+            app.views.current.router.navigate('/debt/list/', {
+                animate: false
+            });
+        } else {
+            mainView.router.navigate('/login-screen/', {
+                animate: false
+            });
+        }
     });
 }
 
@@ -111,45 +110,14 @@ $$(document).on('page:init', '.page[data-name="init"]', function (e) {
     initAppData();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
     function onSuccess(contacts) {
         alert('Found ' + contacts.length + ' contacts.');
-    };
+    }
 
     function onError(contactError) {
         alert('onError!');
-    };
+    }
 
 // find all contacts with 'Bob' in any name field
     var options = new ContactFindOptions();

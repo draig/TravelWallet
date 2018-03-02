@@ -73,7 +73,7 @@ var mainView = app.views.create('.view-main');
 
 db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, device_id, phone_number, log_in)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id, name, phone_number, phones, install_app)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id UNIQUE, name, phone_number, phones, install_app)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, last_synch)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, amount, currency, payer, participant, synch)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS currencies (currency_id UNIQUE, title, sign)');
@@ -86,6 +86,17 @@ db.transaction(function (tx) {
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('rub', 'RUB', '₽')");
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('kzt', 'KZT', '₽')");
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('uah', 'UAH', '')");
+});
+
+db.transaction(function (tx) {
+    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone_number, phones, install_app) VALUES (?, ?, ?, ?, ?)',
+        ['1', 'Andrei Dahskevich', '+375447604989', '+375447604989', true]);
+    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone_number, phones, install_app) VALUES (?, ?, ?, ?, ?)',
+        ['2', 'Tom Cruise', '+375296230945', '+375296230945,+375292879876', true]);
+    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone_number, phones, install_app) VALUES (?, ?, ?, ?, ?)',
+        ['3', 'Leonardo DiCaprio', '+375259085411', '+375259085411', false]);
+    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone_number, phones, install_app) VALUES (?, ?, ?, ?, ?)',
+        ['4', 'Jennifer Lawrence ', '+375445890980', '+375445890980', false]);
 });
 
 function initAppData() {

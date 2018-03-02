@@ -90,6 +90,21 @@ db.transaction(function (tx) {
 
 function initAppData() {
 
+    service.init.add(service.user.getLogIn, function (user) {
+        app.data.user = user;
+        service.init.finish('user');
+    }, 'user');
+
+    service.init.add(function () {
+        if (!app.data.user) {
+            app.views.current.router.navigate('/login-screen/', {
+                animate: false
+            });
+        } else {
+            service.init.finish('login');
+        }
+    }, [], 'login', ['user']);
+
     service.init.add(service.currency.list, function (currencies) {
         app.data.currencies = currencies;
         service.init.finish('currency');
@@ -107,24 +122,13 @@ function initAppData() {
 
     service.init.add(service.debt.list, ['active', function (debts) {
         app.data.debts = debts;
-        service.init.finish();
-    }], ['currency', 'contact', 'payments']);
-
-    service.init.add(service.user.getLogIn, function (user) {
-        app.data.user = user;
-        service.init.finish('user');
-    }, 'user');
+        service.init.finish('debt');
+    }], 'debt');
 
     service.init.start(function () {
-        if (app.data.user) {
-            app.views.current.router.navigate('/debt/list/', {
-                animate: false
-            });
-        } else {
-            app.views.current.router.navigate('/login-screen/', {
-                animate: false
-            });
-        }
+        app.views.current.router.navigate('/debt/list/', {
+            animate: false
+        });
     });
 }
 

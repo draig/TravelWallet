@@ -41,8 +41,7 @@ service.init = (function () {
         start: function (a) {
             after = a;
             initChain.forEach(function (chainEl) {
-                if (chainEl.require.length) {
-                    //++taskCount;
+                if (!chainEl.require.length) {
                     callChainEl(chainEl);
                 } else {
                     chainEl.status = status.WAITING;

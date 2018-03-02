@@ -4,73 +4,79 @@
         <!-- Default view-page layout -->
         <div class="view">
             <div class="page">
-                <!-- page-content has additional login-screen content -->
-                <div class="page-content login-screen-content">
-                    <!-- Login form -->
-                    <form class="phone-number-form">
-                        <p class="text">Pick you country, enter mobile number and press "Next"</p>
+                <div class="tabs-animated-wrap">
+                    <!-- page-content has additional login-screen content -->
+                    <div class="tabs">
+                        <!-- each tabs is a "page-content" -->
+                        <div class="tab login-screen-content page-content tab-active" id="phone-number-tab">
+                            <!-- Login form -->
+                            <form class="phone-number-form">
+                                <p class="text">Pick you country, enter mobile number and press "Next"</p>
 
-                        <div class="list no-hairlines-md">
-                            <ul>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Country</div>
-                                        <div class="item-input-wrap">
-                                            <select name="country" placeholder="Please choose...">
-                                                <option value="belarus">Belarus (+375)</option>
-                                                <option value="russia">Russia (+7)</option>
-                                                <option value="ukraine">Ukraine (+380)</option>
-                                            </select>
-                                        </div>
+                                <div class="list no-hairlines-md">
+                                    <ul>
+                                        <li class="item-content item-input">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">Country</div>
+                                                <div class="item-input-wrap">
+                                                    <select name="country" placeholder="Please choose...">
+                                                        <option value="belarus">Belarus (+375)</option>
+                                                        <option value="russia">Russia (+7)</option>
+                                                        <option value="ukraine">Ukraine (+380)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="item-content item-input">
+                                            <div class="item-inner">
+                                                <div class="item-input-wrap">
+                                                    <input name="phone" type="number" placeholder="Phone">
+                                                    <span class="input-clear-button"></span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="list">
+                                    <ul>
+                                        <li>
+                                            <a @click="next" class="item-link list-button">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab login-screen-content page-content" id="confirmation-code-tab">
+                            <form class="confirmation-code-form">
+                                <p class="text">Do you receive code?</p>
+
+                                <div class="list no-hairlines-md">
+                                    <ul>
+                                        <li class="item-content item-input">
+                                            <div class="item-inner">
+                                                <div class="item-input-wrap">
+                                                    <input name="code" type="number" placeholder="enter it here">
+                                                    <span class="input-clear-button"></span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="list">
+                                    <ul>
+                                        <li>
+                                            <a @click="check" class="item-link list-button">Enter Travel Wallet</a>
+                                        </li>
+                                    </ul>
+                                    <div class="block-footer">
+                                        Sms with code sent to your number.<br>That can take a few minutes.
                                     </div>
-                                </li>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-input-wrap">
-                                            <input name="phone" type="number" placeholder="Phone">
-                                            <span class="input-clear-button"></span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="list">
-                            <ul>
-                                <li>
-                                    <a @click="next" class="item-link list-button">Next</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </form>
-
-                    <form class="confirmation-code-form" hidden="true">
-                        <p class="text">Do you receive code?</p>
-
-                        <div class="list no-hairlines-md">
-                            <ul>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-input-wrap">
-                                            <input name="code" type="number" placeholder="enter it here">
-                                            <span class="input-clear-button"></span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="list">
-                            <ul>
-                                <li>
-                                    <a @click="check" class="item-link list-button">Enter Travel Wallet</a>
-                                </li>
-                            </ul>
-                            <div class="block-footer">
-                                Sms with code sent to your number.<br>That can take a few minutes.
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,8 +120,7 @@
     }
 
     function toConfirmationStep() {
-        $$('form.phone-number-form').hide();
-        $$('form.confirmation-code-form').show();
+        app.tab.show('#confirmation-code-tab', true);
     }
 
     return {
@@ -142,7 +147,7 @@
                                     animate: false
                                 });
                             });
-
+                            service.init.finish('login');
                             app.loginScreen.get().close(); //ToDo move to ajax function
                         }, function (error) {
                             console.log(error);

@@ -28,6 +28,10 @@ var app = new Framework7({
             componentUrl: './pages/debt/new.html'
         },
         {
+            path: '/debt/edit/:debt_id/',
+            componentUrl: './pages/debt/edit.html'
+        },
+        {
             path: '/debt/show/:debt_id/',
             componentUrl: './pages/debt/show.html',
             tabs: [

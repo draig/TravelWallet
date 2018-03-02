@@ -1,5 +1,5 @@
 <template>
-    <div data-name="new-debt" class="page">
+    <div data-name="debt-edit" class="page">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="left">
@@ -10,14 +10,15 @@
                 </div>
                 <div class="title">New debt book</div>
                 <div class="right">
-                    <a @click="create" id="new-debt-submit" href="#" class="link link-disabled">
+                    <a @click="create" id="debt-edit-submit" href="#" class="link link-disabled">
                         <span>Done</span>
                     </a>
                 </div>
             </div>
         </div>
         <div class="page-content">
-            <form class="list no-hairlines-md" id="new-debt-form">
+            <form class="list no-hairlines-md" id="debt-edit-form">
+                <input type="hidden" name="debt_id">
                 <ul>
                     <li class="item-content item-input">
                         <div class="item-inner">
@@ -74,11 +75,11 @@
 <!--suppress JSAnnotator -->
 <script>
     function validate() {
-        var formData = app.form.convertToData('#new-debt-form');
+        var formData = app.form.convertToData('#debt-edit-form');
         if(formData.title && formData.currency.length && formData.participant.length) {
-            $$('#new-debt-submit').removeClass('link-disabled');
+            $$('#debt-edit-submit').removeClass('link-disabled');
         } else {
-            $$('#new-debt-submit').addClass('link-disabled');
+            $$('#debt-edit-submit').addClass('link-disabled');
         }
     }
 
@@ -88,10 +89,11 @@
         },
         methods: {
             create: function () {
-                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
-                    service.debt.create(app.form.convertToData('#new-debt-form'), function (result) {
-                        app.data.debts.push(result);
-                        app.views.current.router.navigate('/debt/list/', {
+                if(!$$('#debt-edit-submit').hasClass('link-disabled')) {
+                    app.preloader.show();
+                    service.debt.update(app.form.convertToData('#debt-edit-form'), function (result) {
+                        app.preloader.hide();
+                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', result.debt_id), {
                             reloadCurrent: true,
                             ignoreCache: true
                         });
@@ -100,6 +102,11 @@
             },
             change: function () {
                 validate();
+            }
+        },
+        on: {
+            pageInit: function (e, page) {
+                app.form.fillFromData('#debt-edit-form', service.debt.get(this.$route.params.debt_id))
             }
         }
     };

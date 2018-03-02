@@ -45,7 +45,7 @@ var app = new Framework7({
                     id: 'calculation',
                     componentUrl: './pages/payment/calculation.html'
                 }
-            ],
+            ]
         },
         {
             path: '/payment/new/:debt_id/',

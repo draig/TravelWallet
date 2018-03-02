@@ -67,6 +67,23 @@ service.debt = (function () {
                     error && error(e);
                 });
             });
+        },
+        
+        update: function (data, success, error) {
+            var debtData = [
+                data.title,
+                data.currency.join(','),
+                data.participant.join(','),
+                data.debt_id
+            ];
+            db.transaction(function (tx) {
+                tx.executeSql('UPDATE debts SET title=?, currency=?, participant=? WHERE debt_id=?', debtData, function (tx, results) {
+                    var result = app.utils.extend(service.debt.get(data.debt_id), data);
+                    success && success(result);
+                }, function (e) {
+                    error && error(e);
+                });
+            });
         }
     }
 })();

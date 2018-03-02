@@ -8,7 +8,7 @@
                         <span>Back</span>
                     </a>
                 </div>
-                <div class="title">Debt</div>
+                <div class="title">{{debt.title}}</div>
                 <div class="right">
                     <a href="/debt/edit/{{$route.params.debt_id}}/" class="link">
                         <i class="icon f7-icons">gear</i>
@@ -40,5 +40,11 @@
 <!--suppress JSAnnotator -->
 <script>
 
-    return {};
+    return {
+        data: function () {
+            return {
+                debt: service.debt.get(this.$route.params.debt_id)
+            };
+        }
+    };
 </script>

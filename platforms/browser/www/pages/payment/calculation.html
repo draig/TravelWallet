@@ -1,0 +1,46 @@
+<template>
+    <div class="list media-list debt-list">
+        <ul>
+            {{#each book}}
+            <li>
+                <a href="#" class="item-link item-content">
+                    <div class="item-inner">
+                        <div class="item-title-row">
+                            <div class="item-subtitle">
+                                <span class="person">{{creditor_name}}</span>
+                                <span class="owe-separator">owe to</span>
+                                <span class="person">{{debtor_name}}</span></div>
+                        </div>
+                        <div class="item-row">
+                            <div class="item-title">{{amount}}</div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</template>
+
+<style>
+    .person {
+        font-weight: 600;
+    }
+
+    .owe-separator {
+        color: #8e8e93;
+    }
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+
+    return {
+
+        data: function () {
+            return {
+                book: service.engine.calculate(this.$route.params.debt_id)
+            }
+        }
+    };
+</script>

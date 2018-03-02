@@ -19,79 +19,23 @@
 
         <div class="toolbar tabbar">
             <div class="toolbar-inner">
-                <a href="#tab-1" class="tab-link tab-link-active">Payments</a>
-                <a href="#tab-2" class="tab-link">Debts</a>
+                <a href="./" class="tab-link" data-route-tab-id="payments">Payments</a>
+                <a href="./calculations/" class="tab-link" data-route-tab-id="calculation">Calculations</a>
             </div>
         </div>
 
-        <div class="tabs-swipeable-wrap">
-            <div class="tabs">
-                <div id="tab-1" class="page-content tab tab-active">
-                    <div class="list media-list payment-list">
-                        <ul>
-                            {{#each payments}}
-                                <li>
-                                    <a href="#" class="item-link item-content">
-                                        <div class="item-media"><img src="img/ava.png" width="80"/></div>
-                                        <div class="item-inner">
-                                            <div class="item-title-row">
-                                                <div class="item-title">{{this.title}}</div>
-                                                <div class="item-after">${{this.amount}}</div>
-                                            </div>
-                                            <div class="item-text">divide with:</div>
-                                            <div class="item-subtitle">5 people</div>
-                                        </div>
-                                    </a>
-                                </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-                <div id="tab-2" class="page-content tab">
-                    <div class="list media-list debt-list">
-                        <ul>
-                            <li>
-                                <a href="#" class="item-link item-content">
-                                    <div class="item-inner">
-                                        <div class="item-title-row">
-                                            <div class="item-subtitle">
-                                                <span class="person">Andrei Dashkevich</span>
-                                                <span class="owe-separator">owe to</span>
-                                                <span class="person">Ivan Ivanov</span></div>
-                                        </div>
-                                        <div class="item-row">
-                                            <div class="item-title">200$</div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <!--<div class="tabs-swipeable-wrap">
+
+        </div>-->
+        <div class="tabs tabs-routable">
+            <div class="page-content tab" id="payments"></div>
+            <div class="page-content tab" id="calculation"></div>
         </div>
     </div>
 </template>
 
-<style>
-    .payment-list .item-media img {
-        border-radius: 50%;
-    }
-    .person {
-        font-weight: 600;
-    }
-    .owe-separator {
-        color: #8e8e93;
-    }
-</style>
-
 <!--suppress JSAnnotator -->
 <script>
-    return {
-        data: function () {
-            return {
-                payments: service.payment.getByDebtId(this.$route.params.debt_id)
-            }
-        }
-    };
+
+    return {};
 </script>

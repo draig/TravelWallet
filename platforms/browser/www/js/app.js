@@ -29,7 +29,19 @@ var app = new Framework7({
         },
         {
             path: '/debt/show/:debt_id/',
-            componentUrl: './pages/debt/show.html'
+            componentUrl: './pages/debt/show.html',
+            tabs: [
+                {
+                    path: '/',
+                    id: 'payments',
+                    componentUrl: './pages/payment/list.html'
+                },
+                {
+                    path: '/calculations/',
+                    id: 'calculation',
+                    componentUrl: './pages/payment/calculation.html'
+                }
+            ],
         },
         {
             path: '/payment/new/:debt_id/',
@@ -44,6 +56,12 @@ var app = new Framework7({
             archived_debts: [],
             currencies: []
         };
+    },
+
+    methods: {
+        name: function (id) {
+            service.contact.get(id);
+        }
     }
 });
 
@@ -108,23 +126,4 @@ function initAppData() {
 
 $$(document).on('page:init', '.page[data-name="init"]', function (e) {
     initAppData();
-});
-
-$$(document).on('page:init', '.page[data-name="new-debt"]', function (e) {
-    function onSuccess(contacts) {
-        alert('Found ' + contacts.length + ' contacts.');
-    }
-
-    function onError(contactError) {
-        alert('onError!');
-    }
-
-// find all contacts with 'Bob' in any name field
-    var options = new ContactFindOptions();
-    //options.filter   = "Bob";
-    options.multiple = true;
-    options.desiredFields = [navigator.contacts.fieldType.id];
-    options.hasPhoneNumber = true;
-    var fields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
-    navigator.contacts.find(fields, onSuccess, onError, options);
 });

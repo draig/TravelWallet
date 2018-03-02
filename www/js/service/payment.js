@@ -46,7 +46,7 @@ service.payment = (function () {
         list: function (success, error) {
             db.transaction(function (tx) {
                 tx.executeSql('SELECT * FROM payments', [], function (tx, results) {
-                    var payments = utils.sqlResultSetToArray(results);
+                    var payments = utils.sqlResultSetToArray(results, {numberFields: ['amount']});
                     payments.forEach(function (payment) {
                         payment.participant = payment.participant.split(',');
                     });

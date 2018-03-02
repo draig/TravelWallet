@@ -48,11 +48,11 @@ service.engine = (function () {
             }
 
             creditors.sort(function (first, second) {
-                return first.amount - second.amount;
+                return second.amount - first.amount;
             });
 
             debtors.sort(function (first, second) {
-                return first.amount - second.amount;
+                return second.amount - first.amount;
             });
 
 
@@ -61,7 +61,7 @@ service.engine = (function () {
                     debtor = debtors[0],
                     extinguished = creditor.amount < debtor.amount;
 
-                (extinguished ? debtor : creditor).amount = -(extinguished ? creditor : debtor).amount;
+                (extinguished ? debtor : creditor).amount -= (extinguished ? creditor : debtor).amount;
                 (extinguished ? creditors : debtors).shift();
 
                 debtBook.push({

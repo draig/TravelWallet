@@ -60,12 +60,6 @@ var app = new Framework7({
             archived_debts: [],
             currencies: []
         };
-    },
-
-    methods: {
-        name: function (id) {
-            service.contact.get(id);
-        }
     }
 });
 

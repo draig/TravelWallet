@@ -7,12 +7,13 @@
                     <div class="item-inner">
                         <div class="item-title-row">
                             <div class="item-subtitle">
-                                <span class="person">{{debtor_name}}</span>
+                                <span>{{name debtor}}</span>
                                 <span class="owe-separator">owe to</span>
-                                <span class="person">{{creditor_name}}</span></div>
+                                <span>{{name creditor}}</span></div>
                         </div>
-                        <div class="item-row">
-                            <div class="item-title">{{amount}}</div>
+                        <div class="item-row calculation-total justify-content-flex-start">
+                            <span>{{format_amount amount}}</span>
+                            <span class="calculation-total-currency">USD</span>
                         </div>
                     </div>
                 </a>
@@ -23,12 +24,18 @@
 </template>
 
 <style>
-    .person {
-        font-weight: 600;
-    }
 
     .owe-separator {
         color: #8e8e93;
+    }
+
+    .calculation-total {
+        font-size: 18px;
+    }
+
+    .calculation-total-currency {
+        padding-left: 3px;
+        color: #808080;
     }
 </style>
 
@@ -39,7 +46,18 @@
 
         data: function () {
             return {
-                book: service.engine.calculate(this.$route.params.debt_id)
+                book: service.engine.calculate(this.$route.params.debt_id),
+                num: 100
+            }
+        },
+        methods: {
+            add2: function (num) {
+                return num + 2;
+            }
+        },
+        helpers: {
+            add2: function (num) {
+                return num + 2;
             }
         }
     };

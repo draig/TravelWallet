@@ -14,9 +14,9 @@
     background: #000000;
 }
 
-input[name="phone"]:before {
+/*input[name="phone"]:before {
     content:"€";
-}
+}*/
 
 p.text {
     text-align: center;
@@ -38,4 +38,16 @@ p.text {
     position: absolute;
     top: 50%;
     margin-top: -22px;
+}
+
+.empty-list {
+    background: none;
+    /*text-align: center;*/
+}
+
+.empty-list p:first-child {
+    margin-bottom: 7px;
+}
+.empty-list p:last-child {
+    margin-top: 7px;
 }

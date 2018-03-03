@@ -15,6 +15,7 @@
         <!-- Scrollable page content -->
         <div class="page-content">
             <div class="list media-list debts-list">
+                {{#if debts.length}}
                 <ul>
                     {{#each debts}}
                         <li class="swipeout" data-debt-id="{{this.debt_id}}">
@@ -23,7 +24,7 @@
                                     <div class="item-inner">
                                         <div class="item-title-row">
                                             <div class="item-title debt-title">{{this.title}}</div>
-                                            <div class="item-after debt-value">{{this.owe}}</div>
+                                            <!--<div class="item-after debt-value">{{this.owe}}</div>-->
                                         </div>
                                     </div>
                                 </a>
@@ -34,6 +35,12 @@
                         </li>
                     {{/each}}
                 </ul>
+                {{else}}
+                    <div class="block empty-list text-align-center">
+                         <p>You haven't debt book yet</p>
+                         <p>Press  <i class="icon f7-icons">add</i> button to add one</p>
+                    </div>
+                {{/if}}
             </div>
         </div>
     </div>

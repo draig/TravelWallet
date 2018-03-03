@@ -1,5 +1,6 @@
 <template>
     <div class="list media-list debt-list">
+        {{#if book.length}}
         <ul>
             {{#each book}}
             <li>
@@ -20,6 +21,7 @@
             </li>
             {{/each}}
         </ul>
+        {{/if}}
     </div>
 </template>
 
@@ -46,18 +48,7 @@
 
         data: function () {
             return {
-                book: service.engine.calculate(this.$route.params.debt_id),
-                num: 100
-            }
-        },
-        methods: {
-            add2: function (num) {
-                return num + 2;
-            }
-        },
-        helpers: {
-            add2: function (num) {
-                return num + 2;
+                book: service.engine.calculate(this.$route.params.debt_id)
             }
         }
     };

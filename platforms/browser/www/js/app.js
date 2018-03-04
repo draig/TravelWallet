@@ -50,7 +50,11 @@ var app = new Framework7({
         {
             path: '/payment/new/:debt_id/',
             componentUrl: './pages/payment/new.html'
-        }
+        },
+        {
+            path: '/user/edit/',
+            componentUrl: './pages/user/edit.html'
+        },
     ],
     data: function () {
         return {

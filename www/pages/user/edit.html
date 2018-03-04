@@ -1,0 +1,84 @@
+<template>
+    <div data-name="debt-edit" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span>Back</span>
+                    </a>
+                </div>
+                <div class="title">New debt book</div>
+                <div class="right">
+                    <a @click="create" id="debt-edit-submit" href="#" class="link link-disabled">
+                        <span>Done</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="avatar-wrapper">
+                <img id="avatar" src="img/ava-1.png"/>
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<style>
+
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+    var croppie;
+
+    function validate() {
+        var formData = app.form.convertToData('#debt-edit-form');
+        if (formData.title && formData.currency.length && formData.participant.length) {
+            $$('#debt-edit-submit').removeClass('link-disabled');
+        } else {
+            $$('#debt-edit-submit').addClass('link-disabled');
+        }
+    }
+
+    return {
+        data: function () {
+            return app.data;
+        },
+        methods: {
+            create: function () {
+                if (!$$('#debt-edit-submit').hasClass('link-disabled')) {
+                    app.preloader.show();
+                    service.debt.update(app.form.convertToData('#debt-edit-form'), function (result) {
+                        app.preloader.hide();
+                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', result.debt_id), {
+                            reloadCurrent: true,
+                            ignoreCache: true
+                        });
+                    });
+                }
+            },
+            change: function () {
+                validate();
+            }
+        },
+        on: {
+            pageInit: function (e, page) {
+                var width = page.$el.width(),
+                    height = Math.round(width * 0.6);
+
+                $$('#avatar').parent().css({height: height + 'px', width: width + 'px'});
+                croppie = new Croppie(document.getElementById('avatar'), {
+                    viewport: {height: height - 15, width: height - 15, type: 'square'}
+                });
+
+                /*$$('#avatar').on('update.croppie', function(ev, cropData) {
+                    console.log('update.croppie');
+                });
+
+                croppie.setZoom(0);*/
+            }
+        }
+    };
+</script>

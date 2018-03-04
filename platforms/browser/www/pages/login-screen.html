@@ -10,7 +10,7 @@
                         <!-- each tabs is a "page-content" -->
                         <div class="tab login-screen-content page-content tab-active" id="phone-number-tab">
                             <!-- Login form -->
-                            <form class="phone-number-form">
+                            <form id="phone-number-form">
                                 <p class="text">Pick you country, enter mobile number and press "Next"</p>
 
                                 <div class="list no-hairlines-md">
@@ -48,7 +48,7 @@
                             </form>
                         </div>
                         <div class="tab login-screen-content page-content" id="confirmation-code-tab">
-                            <form class="confirmation-code-form">
+                            <form id="confirmation-code-form">
                                 <p class="text">Do you receive code?</p>
 
                                 <div class="list no-hairlines-md">
@@ -89,21 +89,13 @@
 <!-- rest of component data and methods -->
 <!--suppress JSAnnotator -->
 <script>
-    // script must return component object
+
     function validatePhone() {
-        if (!$$('input[name="phone"]').val().length) {
-            return false;
-        } else if (!$$('select[name="country"]').val()) {
+        var formData = app.form.convertToData('#phone-number-form');
+        if (!formData.phone || !formData.country) {
             return false;
         }
         return true;
-    }
-
-    function collectPhoneData() {
-        return {
-            country: $$('select[name="country"]').val(),
-            phone: $$('input[name="phone"]').val()
-        };
     }
 
     function validateConfirmCode() {
@@ -114,13 +106,8 @@
     }
 
     function collectFullData() {
-        return app.utils.extend(collectPhoneData(), {
-            code: $$('input[name="code"]').val()
-        });
-    }
-
-    function toConfirmationStep() {
-        app.tab.show('#confirmation-code-tab', true);
+        return app.utils.extend({}, app.form.convertToData('#phone-number-form'),
+            app.form.convertToData('#confirmation-code-form'));
     }
 
     return {
@@ -131,7 +118,7 @@
                     /* app.request.post(endpoint + '/device', collectPhoneData(), function () {
                      mainView.navigate(url, options);
                      });*/
-                    toConfirmationStep(); //ToDo move to ajax function
+                    app.tab.show('#confirmation-code-tab', true);//ToDo move to ajax function
                 }
             },
             check: function () {
@@ -139,19 +126,11 @@
                     /* app.request.post(endpoint + '/device/confirmation', collectFullData(), function () {
                      mainView.navigate(url, options);
                      });*/
-                    var fullData = collectFullData();
-                    db.transaction(function (tx) {
-                        tx.executeSql('INSERT INTO users (phone_number, log_in) VALUES (?, ?)', [fullData.phone, true], function (tx, results) {//ToDo insert user_id and device_id
-                            app.loginScreen.get().on('close', function(){
-                                app.views.current.router.navigate('/debt/list/',{
-                                    animate: false
-                                });
-                            });
-                            service.init.finish('login');
-                            app.loginScreen.get().close(); //ToDo move to ajax function
-                        }, function (error) {
-                            console.log(error);
-                        });
+                    service.user.create(collectFullData(), function (tx, results) {//ToDo insert user_id and device_id
+                        app.loginScreen.get().close(); //ToDo move to ajax function
+                        service.init.finish('login');
+                    }, function (error) {
+                        console.log(error);
                     });
                 }
             }

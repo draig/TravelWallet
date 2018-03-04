@@ -14,7 +14,7 @@ service.user = (function () {
                             success && success();
                         });
                     }
-                }, function (e) {
+                }, function (tx, error) {
                     error && error(e);
                 });
             });
@@ -30,8 +30,23 @@ service.user = (function () {
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO users (user_id, device_id, phone_number, log_in) VALUES (?, ?, ?, ?)', userData, function (tx, results) {
                     app.loginScreen.get().close(); //ToDo move to ajax function
-                }, function (error) {
+                }, function (tx, error) {
                     console.log(error);
+                });
+            });
+        },
+
+        update: function (data, success, error) {
+            var userData = [
+                data.name,
+                data.user_id
+            ];
+            db.transaction(function (tx) {
+                tx.executeSql('UPDATE users SET name=? WHERE user_id=?', userData, function (tx, results) {
+                    var result = app.utils.extend(app.data.user, data);
+                    success && success(result);
+                }, function (tx, e) {
+                    error && error(e);
                 });
             });
         }

@@ -8,7 +8,7 @@ service.contact = (function () {
             db.transaction(function (tx) {
                 tx.executeSql('SELECT * FROM contacts', [], function (tx, results) {
                     success && success(utils.sqlResultSetToArray(results));
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });

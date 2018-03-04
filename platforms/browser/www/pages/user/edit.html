@@ -1,5 +1,5 @@
 <template>
-    <div data-name="debt-edit" class="page">
+    <div data-name="user-edit" class="page">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="left">
@@ -8,9 +8,9 @@
                         <span>Back</span>
                     </a>
                 </div>
-                <div class="title">New debt book</div>
+                <div class="title">Profile</div>
                 <div class="right">
-                    <a @click="create" id="debt-edit-submit" href="#" class="link link-disabled">
+                    <a @click="create" id="user-edit-submit" href="#" class="link link-disabled">
                         <span>Done</span>
                     </a>
                 </div>
@@ -20,37 +20,54 @@
             <div class="avatar-wrapper">
                 <img id="avatar" src="img/ava-1.png"/>
             </div>
-            <div class="list simple-list">
+
+            <form class="list no-hairlines-md" id="user-edit-form">
+                <input type="hidden" name="user_id" value="{{user.user_id}}">
                 <ul>
-                    <li>
-                        <div class="item-cell width-auto flex-shrink-0">
-                            <i class="icon f7-icons">camera_fill</i>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <button class="button col file-button">
+                                <span>Choose photo</span>
+                                <input type="file" @change="file" accept="image/*"/>
+                            </button>
                         </div>
-                        <div class="item-cell flex-shrink-3">
-                            <div class="range-slider" id="zoom-slider">
-                                <input type="range">
+                    </li>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Name</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="text" name="name" value="{{user.name}}" required validate placeholder="John Doe">
+                                <span class="input-clear-button"></span>
                             </div>
                         </div>
                     </li>
                 </ul>
-            </div>
+            </form>
         </div>
     </div>
 </template>
 
 <style>
+    .file-button {
+        width: 150px !important;
+        margin: 10px auto;
+    }
 
+    .page[data-name="user-edit"] .list {
+        margin-top: 0;
+    }
 </style>
 
 <!--suppress JSAnnotator -->
 <script>
+    var croppie;
 
     function validate() {
-        var formData = app.form.convertToData('#debt-edit-form');
-        if (formData.title && formData.currency.length && formData.participant.length) {
-            $$('#debt-edit-submit').removeClass('link-disabled');
+        var formData = app.form.convertToData('#user-edit-form');
+        if (formData.name) {
+            $$('#user-edit-submit').removeClass('link-disabled');
         } else {
-            $$('#debt-edit-submit').addClass('link-disabled');
+            $$('#user-edit-submit').addClass('link-disabled');
         }
     }
 
@@ -59,20 +76,40 @@
             return app.data;
         },
         methods: {
+
             create: function () {
-                if (!$$('#debt-edit-submit').hasClass('link-disabled')) {
+                if (!$$('#user-edit-submit').hasClass('link-disabled')) {
                     app.preloader.show();
-                    service.debt.update(app.form.convertToData('#debt-edit-form'), function (result) {
+
+                    service.user.update(app.form.convertToData('#user-edit-form'), function (result) {
                         app.preloader.hide();
-                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', result.debt_id), {
-                            reloadCurrent: true,
-                            ignoreCache: true
-                        });
+                        service.init.finish('profile');
+                    }, function (e) {
+                        console.log(e);
                     });
                 }
             },
+
             change: function () {
                 validate();
+            },
+
+            file: function(e) {
+                var input = e.target;
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        croppie.bind({
+                            url: event.target.result
+                        })
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    console.error('FileReader API doesn\'t support');
+                }
             }
         },
         on: {
@@ -82,7 +119,8 @@
 
                 $$('#avatar').parent().css({height: height + 'px', width: width + 'px'});
                 croppie = new Croppie(document.getElementById('avatar'), {
-                    viewport: {height: height - 15, width: height - 15, type: 'square'}
+                    viewport: {height: height - 20, width: height - 20, type: 'square'},
+                    showZoomer: false
                 });
             }
         }

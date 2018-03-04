@@ -70,7 +70,7 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main');
 
 db.transaction(function (tx) {
-    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, device_id, phone_number, log_in)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, name, device_id, phone_number, log_in)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id UNIQUE, name, phone_number, phones, install_app)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, last_synch)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, amount, currency, payer, participant, synch)');
@@ -113,6 +113,16 @@ function initAppData() {
             service.init.finish('login');
         }
     }, [], 'login', ['user']);
+
+    service.init.add(function () {
+        if (!app.data.user.name) {
+            app.views.current.router.navigate('/user/edit/', {
+                animate: false
+            });
+        } else {
+            service.init.finish('profile');
+        }
+    }, [], 'profile', ['login']);
 
     service.init.add(service.currency.list, function (currencies) {
         app.data.currencies = currencies;

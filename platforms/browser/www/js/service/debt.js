@@ -27,7 +27,7 @@ service.debt = (function () {
                         last_synch: debtData[6]
                     });
                     success && success(result);
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });
@@ -48,7 +48,7 @@ service.debt = (function () {
                         debt.currency = debt.currency.split(',');
                     });
                     success && success(debts);
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });
@@ -80,7 +80,7 @@ service.debt = (function () {
                 tx.executeSql('UPDATE debts SET title=?, currency=?, participant=? WHERE debt_id=?', debtData, function (tx, results) {
                     var result = app.utils.extend(service.debt.get(data.debt_id), data);
                     success && success(result);
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });

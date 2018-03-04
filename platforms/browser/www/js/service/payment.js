@@ -21,7 +21,7 @@ service.payment = (function () {
                         synch: debtPayment[5]
                     });
                     success && success(result);
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });
@@ -51,7 +51,7 @@ service.payment = (function () {
                         payment.participant = payment.participant.split(',');
                     });
                     success && success(payments);
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });

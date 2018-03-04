@@ -600,44 +600,62 @@
         }
     }
 
-    function _updateZoomer(options) {
-        var self = this;
+    function _initializeZoom() {
+        var self = this,
+            wrap = self.elements.zoomerWrap = document.createElement('div'),
+            zoomer = self.elements.zoomer = document.createElement('input');
 
-        _destroyZoomer.call(self);
-        return self.zoomer = app.range.create({
-            el: self.elements.zoomerWrap,
-            step: 0.0001,
-            max: options.max || 1.5,
-            min: options.min || 0,
-            value: 1,
-            on: {
-                change: function (e, range) {
-                    _onZoom.call(self, {
-                        value: range,
-                        origin: new TransformOrigin(self.elements.preview),
-                        viewportRect: self.elements.viewport.getBoundingClientRect(),
-                        transform: Transform.parse(self.elements.preview)
-                    });
-                }
-            }
-        });
-    }
+        addClass(wrap, 'cr-slider-wrap');
+        addClass(zoomer, 'cr-slider');
+        zoomer.type = 'range';
+        zoomer.step = '0.0001';
+        zoomer.value = 1;
+        zoomer.style.display = self.options.showZoomer ? '' : 'none';
+        zoomer.setAttribute('aria-label', 'zoom');
 
-    function _destroyZoomer() {
-        var self = this;
+        self.element.appendChild(wrap);
+        wrap.appendChild(zoomer);
 
-        app.range.destroy(self.elements.zoomerWrap);
-        $$(self.elements.zoomer).siblings().remove();
-    }
-
-    function _initializeZoom(query) {
-        var self = this, query = '#zoom-slider',
-            wrap = self.elements.zoomerWrap = document.querySelector(query),
-            zoomer = self.elements.zoomer = wrap.querySelector('input');
-
-        $$(zoomer).attr('aria-label', 'zoom');
-        self.options.showZoomer || $$(zoomer).hide();
         self._currentZoom = 1;
+
+        function change() {
+            _onZoom.call(self, {
+                value: parseFloat(zoomer.value),
+                origin: new TransformOrigin(self.elements.preview),
+                viewportRect: self.elements.viewport.getBoundingClientRect(),
+                transform: Transform.parse(self.elements.preview)
+            });
+        }
+
+        function scroll(ev) {
+            var delta, targetZoom;
+
+            if(self.options.mouseWheelZoom === 'ctrl' && ev.ctrlKey != true){
+                return 0;
+            } else if (ev.wheelDelta) {
+                delta = ev.wheelDelta / 1200; //wheelDelta min: -120 max: 120 // max x 10 x 2
+            } else if (ev.deltaY) {
+                delta = ev.deltaY / 1060; //deltaY min: -53 max: 53 // max x 10 x 2
+            } else if (ev.detail) {
+                delta = ev.detail / -60; //delta min: -3 max: 3 // max x 10 x 2
+            } else {
+                delta = 0;
+            }
+
+            targetZoom = self._currentZoom + (delta * self._currentZoom);
+
+            ev.preventDefault();
+            _setZoomerVal.call(self, targetZoom);
+            change.call(self);
+        }
+
+        self.elements.zoomer.addEventListener('input', change);// this is being fired twice on keypress
+        self.elements.zoomer.addEventListener('change', change);
+
+        if (self.options.mouseWheelZoom) {
+            self.elements.boundary.addEventListener('mousewheel', scroll);
+            self.elements.boundary.addEventListener('DOMMouseScroll', scroll);
+        }
     }
 
     function _onZoom(ui) {
@@ -898,7 +916,7 @@
                     var scale = dist / originalDistance;
 
                     _setZoomerVal.call(self, scale);
-                    //dispatchChange(self.elements.zoomer);
+                    dispatchChange(self.elements.zoomer);
                     return;
                 }
             }
@@ -1029,6 +1047,8 @@
             maxZoom = self.options.maxZoom || 1.5,
             initialZoom,
             defaultInitialZoom,
+            zoomer = self.elements.zoomer,
+            scale = parseFloat(zoomer.value),
             boundaryData = self.elements.boundary.getBoundingClientRect(),
             imgData = naturalImageDimensions(self.elements.img, self.data.orientation),
             vpData = self.elements.viewport.getBoundingClientRect(),
@@ -1044,21 +1064,19 @@
             maxZoom = minZoom + 1;
         }
 
-
-        var zoomer = _updateZoomer.call(self, {min: +fix(minZoom, 4), max: +fix(maxZoom, 4)}),
-            scale = self.zoomer.getValue();
+        zoomer.min = fix(minZoom, 4);
+        zoomer.max = fix(maxZoom, 4);
 
         if (!initial && (scale < zoomer.min || scale > zoomer.max)) {
             _setZoomerVal.call(self, scale < zoomer.min ? zoomer.min : zoomer.max);
         }
         else if (initial) {
-            defaultInitialZoom = Math.max((boundaryData.width / imgData.width), (boundaryData.height / imgData.height));
-            initialZoom = self.data.boundZoom !== null ? self.data.boundZoom : defaultInitialZoom;
-            console.log(initialZoom);
-            _setZoomerVal.call(self, initialZoom);
+            //defaultInitialZoom = Math.max((boundaryData.width / imgData.width), (boundaryData.height / imgData.height));
+            //initialZoom = self.data.boundZoom !== null ? self.data.boundZoom : defaultInitialZoom;
+            _setZoomerVal.call(self, +zoomer.min);
         }
 
-        //dispatchChange(zoomer);
+        dispatchChange(zoomer);
     }
 
     function _bindPoints(points) {
@@ -1548,7 +1566,7 @@
         },
         setZoom: function (v) {
             _setZoomerVal.call(this, v);
-            //dispatchChange(this.elements.zoomer);
+            dispatchChange(this.elements.zoomer);
         },
         rotate: function (deg) {
             _rotate.call(this, deg);

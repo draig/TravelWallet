@@ -29,7 +29,13 @@ service.user = (function () {
             ];
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO users (user_id, device_id, phone_number, log_in) VALUES (?, ?, ?, ?)', userData, function (tx, results) {
-                    app.loginScreen.get().close(); //ToDo move to ajax function
+                    var result = app.data.user = {
+                        user_id: userData[0],
+                        device_id: userData[1],
+                        phone_number: data.phone,
+                        log_in: userData[3],
+                    };
+                    success && success(result);
                 }, function (tx, error) {
                     console.log(error);
                 });
@@ -43,7 +49,9 @@ service.user = (function () {
             ];
             db.transaction(function (tx) {
                 tx.executeSql('UPDATE users SET name=? WHERE user_id=?', userData, function (tx, results) {
-                    var result = app.utils.extend(app.data.user, data);
+                    var result = app.utils.extend(app.data.user, {
+                        name: data.name
+                    });
                     success && success(result);
                 }, function (tx, e) {
                     error && error(e);

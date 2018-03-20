@@ -8,23 +8,19 @@ service.debt = (function () {
 
         create: function (data, success, error) {
             var debtData = [
-                utils.uuid(),
+                'local-' + utils.uuid(),
                 data.title,
                 data.currency.join(','),
                 data.participant.join(','),
-                0,
                 status.ACTIVE,
-                0
+                false
             ];
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO debts (debt_id, title, currency, participant, owe, status, last_synch) VALUES (?, ?, ?, ?, ?, ?, ?)', debtData, function (tx, results) {
+                tx.executeSql('INSERT INTO debts (debt_id, title, currency, participant, status, sync) VALUES (?, ?, ?, ?, ?, ?)', debtData, function (tx, results) {
                     var result = app.utils.extend(data, {
                         debt_id: debtData[0],
-                        //currency: [],
-                        //participant: [],
-                        owe: debtData[4],
                         status: debtData[5],
-                        last_synch: debtData[6]
+                        sync: debtData[6]
                     });
                     success && success(result);
                 }, function (e) {

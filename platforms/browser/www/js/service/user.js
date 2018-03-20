@@ -14,7 +14,7 @@ service.user = (function () {
                             success && success();
                         });
                     }
-                }, function (tx, error) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });
@@ -22,22 +22,25 @@ service.user = (function () {
 
         create: function (data, success, error) {
             var userData = [
-                utils.uuid(),
+                data.id,
                 utils.uuid(),
                 data.phone,
+                true,
+                data.auth_token,
                 true
             ];
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO users (user_id, device_id, phone_number, log_in) VALUES (?, ?, ?, ?)', userData, function (tx, results) {
+                tx.executeSql('INSERT INTO users (user_id, device_id, phone, log_in, auth_token, sync) VALUES (?, ?, ?, ?, ?, ?)', userData, function (tx, results) {
                     var result = app.data.user = {
-                        user_id: userData[0],
+                        user_id: data.id,
                         device_id: userData[1],
-                        phone_number: data.phone,
+                        phone: data.phone,
                         log_in: userData[3],
+                        auth_token: data.auth_token
                     };
                     success && success(result);
-                }, function (tx, error) {
-                    console.log(error);
+                }, function (tx, e) {
+                    error && error(e);
                 });
             });
         },
@@ -48,7 +51,7 @@ service.user = (function () {
                 data.user_id
             ];
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE users SET name=? WHERE user_id=?', userData, function (tx, results) {
+                tx.executeSql('UPDATE users SET name=?, sync=\'false\' WHERE user_id=? AND log_in=\'true\'', userData, function (tx, results) {
                     var result = app.utils.extend(app.data.user, {
                         name: data.name
                     });

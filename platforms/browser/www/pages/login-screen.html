@@ -19,10 +19,10 @@
                                             <div class="item-inner">
                                                 <div class="item-title item-label">Country</div>
                                                 <div class="item-input-wrap">
-                                                    <select name="country" placeholder="Please choose...">
-                                                        <option value="belarus">Belarus (+375)</option>
-                                                        <option value="russia">Russia (+7)</option>
-                                                        <option value="ukraine">Ukraine (+380)</option>
+                                                    <select name="country_code" placeholder="Please choose...">
+                                                        <option value="+375">Belarus (+375)</option>
+                                                        <option value="+7">Russia (+7)</option>
+                                                        <option value="+380">Ukraine (+380)</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -30,7 +30,7 @@
                                         <li class="item-content item-input">
                                             <div class="item-inner">
                                                 <div class="item-input-wrap">
-                                                    <input name="phone" type="number" placeholder="Phone">
+                                                    <input name="phone_number" type="number" placeholder="Phone">
                                                     <span class="input-clear-button"></span>
                                                 </div>
                                             </div>
@@ -56,7 +56,7 @@
                                         <li class="item-content item-input">
                                             <div class="item-inner">
                                                 <div class="item-input-wrap">
-                                                    <input name="code" type="number" placeholder="enter it here">
+                                                    <input name="verification_code" type="number" placeholder="enter it here">
                                                     <span class="input-clear-button"></span>
                                                 </div>
                                             </div>
@@ -92,14 +92,14 @@
 
     function validatePhone() {
         var formData = app.form.convertToData('#phone-number-form');
-        if (!formData.phone || !formData.country) {
+        if (!formData.phone_number || !formData.country_code) {
             return false;
         }
         return true;
     }
 
     function validateConfirmCode() {
-        if ($$('input[name="code"]').val().length != 6) {
+        if ($$('input[name="verification_code"]').val().length != 4) {
             return false;
         }
         return true;
@@ -115,19 +115,17 @@
         methods: {
             next: function () {
                 if (validatePhone()) {
-                    /* app.request.post(endpoint + '/device', collectPhoneData(), function () {
-                     mainView.navigate(url, options);
-                     });*/
-                    app.tab.show('#confirmation-code-tab', true);//ToDo move to ajax function
+                    service.auth.send_sms(app.form.convertToData('#phone-number-form'), function () {
+                        app.tab.show('#confirmation-code-tab', true);
+                    }, function (error) {
+                        console.log(error);
+                    });
                 }
             },
             check: function () {
                 if (validateConfirmCode()) {
-                    /* app.request.post(endpoint + '/device/confirmation', collectFullData(), function () {
-                     mainView.navigate(url, options);
-                     });*/
-                    service.user.create(collectFullData(), function (tx, results) {//ToDo insert user_id and device_id
-                        app.loginScreen.get().close(); //ToDo move to ajax function
+                    service.auth.verify_code(collectFullData(), function () {
+                        app.loginScreen.get().close();
                         service.init.finish('login');
                     }, function (error) {
                         console.log(error);

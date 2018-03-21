@@ -21,6 +21,12 @@
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.startupsoft.travelwallet"
         }
     },
     "dependent_plugins": {}

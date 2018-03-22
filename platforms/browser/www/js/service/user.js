@@ -47,18 +47,36 @@ service.user = (function () {
 
         update: function (data, success, error) {
             var userData = [
-                data.name,
-                data.user_id
+                data.name || app.data.user.name,
+                data.ava || app.data.user.ava,
+                data.user_id || app.data.user.user_id
             ];
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE users SET name=?, sync=\'false\' WHERE user_id=? AND log_in=\'true\'', userData, function (tx, results) {
+                tx.executeSql('UPDATE users SET name=?, ava=?, sync=\'false\' WHERE user_id=? AND log_in=\'true\'', userData, function (tx, results) {
                     var result = app.utils.extend(app.data.user, {
-                        name: data.name
+                        name: userData[0],
+                        ava: userData[1]
                     });
                     success && success(result);
                 }, function (tx, e) {
                     error && error(e);
                 });
+            });
+        },
+
+        avatar: function (avatarBlob, success, error) {
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+                fs.root.getFile("avatar.png", { create: true, exclusive: false }, function (fileEntry, dataObj) {
+                    fileEntry.createWriter(function (fileWriter) {
+                        fileWriter.onwriteend = function() {
+                            service.user.update({ava: fileEntry.toURL()});
+                            success && success();
+                        };
+                        fileWriter.onerror = function (e) { error && error(e); };
+                        fileWriter.write(avatarBlob);
+                    });
+                });
+
             });
         }
     }

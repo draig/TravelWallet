@@ -30,7 +30,6 @@
                                 <span>Choose photo</span>
                                 <input type="file" @change="file" accept="image/*"/>
                             </button>
-                            <button class="button col" @click="save">Save image</button>
                         </div>
                     </li>
                     <li class="item-content item-input">
@@ -72,37 +71,6 @@
         }
     }
 
-    function saveAvatar(dataObj) {
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-
-            console.log('file system open: ' + fs.name);
-            fs.root.getFile("avatar.png", { create: true, exclusive: false }, function (fileEntry, dataObj) {
-                // Create a FileWriter object for our FileEntry (log.txt).
-                fileEntry.createWriter(function (fileWriter) {
-
-                    fileWriter.onwriteend = function() {
-                        console.log("Successful file write...");
-                        console.log(fileEntry.toURL());
-                        //readFile(fileEntry);
-                    };
-
-                    fileWriter.onerror = function (e) {
-                        console.log("Failed file write: " + e.toString());
-                    };
-
-                    // If data object is not passed in,
-                    // create a new Blob instead.
-                if (!dataObj) {
-                    dataObj = new Blob(['some file data'], { type: 'text/plain' });
-                }
-
-                    fileWriter.write(dataObj);
-                });
-            });
-
-        });
-    }
-
     return {
         data: function () {
             return app.data;
@@ -112,13 +80,16 @@
             create: function () {
                 if (!$$('#user-edit-submit').hasClass('link-disabled')) {
                     app.preloader.show();
-
+                    croppie.result('blob').then(function (blob) {
+                        service.user.avatar(blob);
+                    });
                     service.user.update(app.form.convertToData('#user-edit-form'), function (result) {
                         app.preloader.hide();
                         service.init.finish('profile');
                     }, function (e) {
                         console.log(e);
                     });
+
                 }
             },
 
@@ -142,13 +113,6 @@
                 } else {
                     console.error('FileReader API doesn\'t support');
                 }
-            },
-            
-            save: function () {
-                croppie.result('blob').then(function (blob) {
-                    console.log(arguments);
-                    saveAvatar(blob);
-                });
             }
         },
         on: {
@@ -157,7 +121,7 @@
                     height = Math.round(width * 0.6);
 
                 $$('#avatar').parent().css({height: height + 'px', width: width + 'px'});
-                app.data.croppie = croppie = new Croppie(document.getElementById('avatar'), {
+                croppie = new Croppie(document.getElementById('avatar'), {
                     viewport: {height: height - 20, width: height - 20, type: 'square'},
                     showZoomer: false
                 });

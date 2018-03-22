@@ -70,8 +70,8 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main');
 
 db.transaction(function (tx) {
-    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, name, device_id, phone, log_in, auth_token, sync)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id UNIQUE, name, phone, phones, install_app, sync)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, name, device_id, phone, log_in, ava, auth_token, sync)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id UNIQUE, name, phone, phones, ava, install_app, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, amount, currency, payer, participant, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS currencies (currency_id UNIQUE, title, sign)');

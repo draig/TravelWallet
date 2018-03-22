@@ -78,6 +78,18 @@ service.user = (function () {
                 });
 
             });
+        },
+
+        contact: function () {
+            var u = app.data.user;
+            return {
+                contact_id: u.user_id,
+                name: u.name,
+                phone: u.phone,
+                ava: u.ava,
+                install_app: true,
+                sync: true
+            }
         }
     }
 })();

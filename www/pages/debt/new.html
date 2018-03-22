@@ -34,6 +34,7 @@
                            data-searchbar="true"
                            data-searchbar-placeholder="141 contacts">
                             <select name="participant" @change="change" required multiple>
+                                <option selected disabled value="{{user.user_id}}">You</option>
                                 {{#each contacts}}
                                     <option value="{{this.contact_id}}">{{this.name}}</option>
                                 {{/each}}

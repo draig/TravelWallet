@@ -21,6 +21,7 @@ service.contact = (function () {
         },
 
         get: function (contact_id) {
+            if(app.data.user.user_id == contact_id) return service.user.contact();
             return app.data.contacts.find(function (contact) {
                 return contact.contact_id === contact_id;
             });

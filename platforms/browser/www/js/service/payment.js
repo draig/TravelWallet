@@ -15,10 +15,10 @@ service.payment = (function () {
             ];
 
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO payments (payment_id, debt_id, title, currency, amount, payer, participant, synch) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', debtPayment, function (tx, results) {
+                tx.executeSql('INSERT INTO payments (payment_id, debt_id, title, currency, amount, payer, participant, sync) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', debtPayment, function (tx, results) {
                     var result = app.utils.extend(data, {
                         payment_id: debtPayment[0],
-                        synch: debtPayment[5]
+                        sync: debtPayment[5]
                     });
                     success && success(result);
                 }, function (e) {

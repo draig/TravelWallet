@@ -21,6 +21,26 @@ var utils = (function () {
                 }
             }
             return plainResult;
+        },
+
+        // arraysEqual: function (a1, a2) {
+        //     return a1.length == a2.length && a1.every(function (v, i) {
+        //         return v === a2[i]
+        //     });
+        // },
+
+        saveBlob: function (blob, fileName, fs, success, error) {
+            fs.root.getFile(fileName, {create: true, exclusive: false}, function (fileEntry, dataObj) {
+                fileEntry.createWriter(function (fileWriter) {
+                    fileWriter.onwriteend = function () {
+                        success && success(fileEntry);
+                    };
+                    fileWriter.onerror = function (e) {
+                        error && error(e);
+                    };
+                    fileWriter.write(blob);
+                });
+            });
         }
     }
 })();

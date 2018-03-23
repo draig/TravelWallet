@@ -16,6 +16,12 @@ service.currency = (function () {
             return app.data.currencies.filter(function (currency) {
                 return ids.indexOf(currency.currency_id) !== -1;
             });
+        },
+
+        get: function (currency_id) {
+            return app.data.currencies.find(function (currency) {
+                return currency.currency_id === currency_id;
+            });
         }
     }
 })();

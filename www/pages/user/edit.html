@@ -18,7 +18,7 @@
         </div>
         <div class="page-content">
             <div class="avatar-wrapper">
-                <img id="avatar" src="img/ava-1.png"/>
+                <img id="avatar" src="{{user.ava}}"/>
             </div>
 
             <form class="list no-hairlines-md" id="user-edit-form">
@@ -61,6 +61,7 @@
 <!--suppress JSAnnotator -->
 <script>
     var croppie;
+    var avaChanged = false;
 
     function validate() {
         var formData = app.form.convertToData('#user-edit-form');
@@ -68,6 +69,14 @@
             $$('#user-edit-submit').removeClass('link-disabled');
         } else {
             $$('#user-edit-submit').addClass('link-disabled');
+        }
+    }
+
+    function saveAvatar() {
+        if(avaChanged || croppie.get().zoom !== 1) {
+            croppie.result('blob').then(function (avaBlob) {
+                service.user.avatar(avaBlob);
+            });
         }
     }
 
@@ -80,16 +89,13 @@
             create: function () {
                 if (!$$('#user-edit-submit').hasClass('link-disabled')) {
                     app.preloader.show();
-                    croppie.result('blob').then(function (blob) {
-                        service.user.avatar(blob);
-                    });
+                    saveAvatar();
                     service.user.update(app.form.convertToData('#user-edit-form'), function (result) {
-                        app.preloader.hide();
                         service.init.finish('profile');
+                        app.preloader.hide();
                     }, function (e) {
                         console.log(e);
                     });
-
                 }
             },
 
@@ -106,7 +112,8 @@
                     reader.onload = function (event) {
                         croppie.bind({
                             url: event.target.result
-                        })
+                        });
+                        avaChanged = true;
                     };
 
                     reader.readAsDataURL(input.files[0]);
@@ -121,7 +128,7 @@
                     height = Math.round(width * 0.6);
 
                 $$('#avatar').parent().css({height: height + 'px', width: width + 'px'});
-                croppie = new Croppie(document.getElementById('avatar'), {
+                app.data.croppie = croppie = new Croppie(document.getElementById('avatar'), {
                     viewport: {height: height - 20, width: height - 20, type: 'square'},
                     showZoomer: false
                 });

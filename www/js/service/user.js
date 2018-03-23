@@ -26,16 +26,18 @@ service.user = (function () {
                 utils.uuid(),
                 data.phone,
                 true,
+                data.ava || '',
                 data.auth_token,
                 true
             ];
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO users (user_id, device_id, phone, log_in, auth_token, sync) VALUES (?, ?, ?, ?, ?, ?)', userData, function (tx, results) {
+                tx.executeSql('INSERT INTO users (user_id, device_id, phone, log_in, ava, auth_token, sync) VALUES (?, ?, ?, ?, ?, ?, ?)', userData, function (tx, results) {
                     var result = app.data.user = {
                         user_id: data.id,
                         device_id: userData[1],
                         phone: data.phone,
                         log_in: userData[3],
+                        ava: userData[4],
                         auth_token: data.auth_token
                     };
                     success && success(result);
@@ -66,18 +68,11 @@ service.user = (function () {
 
         avatar: function (avatarBlob, success, error) {
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                fs.root.getFile("avatar.png", { create: true, exclusive: false }, function (fileEntry, dataObj) {
-                    fileEntry.createWriter(function (fileWriter) {
-                        fileWriter.onwriteend = function() {
-                            service.user.update({ava: fileEntry.toURL()});
-                            success && success();
-                        };
-                        fileWriter.onerror = function (e) { error && error(e); };
-                        fileWriter.write(avatarBlob);
-                    });
+                utils.saveBlob(avatarBlob, "new_avatar.png", fs, function (fileEntry) {
+                    service.user.update({ava: fileEntry.toURL()});
+                    success && success();
                 });
-
-            });
+            }, function (e) { error && error(e); });
         },
 
         contact: function () {

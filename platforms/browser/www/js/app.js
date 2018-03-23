@@ -75,6 +75,7 @@ db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, amount, currency, payer, participant, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS currencies (currency_id UNIQUE, title, sign)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS currency_rates (first, second, 1per2 NUM, 2per1 NUM, PRIMARY KEY(first, second))');
 });
 
 db.transaction(function (tx) {
@@ -84,6 +85,11 @@ db.transaction(function (tx) {
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('rub', 'RUB', '₽')");
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('kzt', 'KZT', '₽')");
     tx.executeSql("INSERT OR IGNORE INTO currencies (currency_id, title, sign) VALUES ('uah', 'UAH', '')");
+    // tx.executeSql("INSERT OR IGNORE INTO currency_rates (first, second, 1per2, 2per1) VALUES ('usd', 'eur', 0.8106762085, 1.2335381124)");
+    // tx.executeSql("INSERT OR IGNORE INTO currency_rates (first, second, 1per2, 2per1) VALUES ('usd', 'byn', 1.9499823787, 0.5128251470)");
+    // tx.executeSql("INSERT OR IGNORE INTO currency_rates (first, second, 1per2, 2per1) VALUES ('usd', 'rub', 57.2282706647, 0.0174738811)");
+    // tx.executeSql("INSERT OR IGNORE INTO currency_rates (first, second, 1per2, 2per1) VALUES ('usd', 'rub', 320.6281887763, 0.0031188774)");
+    // tx.executeSql("INSERT OR IGNORE INTO currency_rates (first, second, 1per2, 2per1) VALUES ('usd', 'rub', 26.3749476034, 0.0379147673)");
 });
 
 db.transaction(function (tx) {

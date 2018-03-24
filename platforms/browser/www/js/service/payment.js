@@ -33,16 +33,6 @@ service.payment = (function () {
             });
         },
 
-        /*list: function (debt_id, success, error) {
-            db.transaction(function (tx) {
-                tx.executeSql('SELECT * FROM payments WHERE debt_id=?', [debt_id], function (tx, results) {
-                    success && success(utils.sqlResultSetToArray(results));
-                }, function (e) {
-                    error && error(e);
-                });
-            });
-        }*/
-
         list: function (success, error) {
             db.transaction(function (tx) {
                 tx.executeSql('SELECT * FROM payments', [], function (tx, results) {
@@ -54,6 +44,12 @@ service.payment = (function () {
                 }, function (e) {
                     error && error(e);
                 });
+            });
+        },
+
+        forSync: function () {
+            return app.data.payments.filter(function (payment) {
+                return payment.sync === 'false';
             });
         }
     }

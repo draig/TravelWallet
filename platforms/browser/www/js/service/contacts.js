@@ -8,7 +8,7 @@ service.contact = (function () {
             db.transaction(function (tx) {
                 tx.executeSql('SELECT * FROM contacts', [], function (tx, results) {
                     success && success(utils.sqlResultSetToArray(results));
-                }, function (e) {
+                }, function (tx, e) {
                     error && error(e);
                 });
             });
@@ -43,6 +43,12 @@ service.contact = (function () {
             options.hasPhoneNumber = true;
             var fields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
             navigator.contacts.find(fields, onSuccess, onError, options);
+        },
+
+        forSync: function () {
+            return app.data.contacts.filter(function (contact) {
+                return contact.sync === 'false';
+            });
         }
     }
 })();

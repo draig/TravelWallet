@@ -70,15 +70,22 @@ service.debt = (function () {
                 data.title,
                 data.currency.join(','),
                 data.participant.join(','),
-                data.debt_id
+                data.debt_id,
+                false
             ];
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE debts SET title=?, currency=?, participant=? WHERE debt_id=?', debtData, function (tx, results) {
-                    var result = app.utils.extend(service.debt.get(data.debt_id), data);
+                tx.executeSql('UPDATE debts SET title=?, currency=?, participant=?, sync=? WHERE debt_id=?', debtData, function (tx, results) {
+                    var result = app.utils.extend(service.debt.get(data.debt_id), data, {sync: debtData[4]});
                     success && success(result);
                 }, function (e) {
                     error && error(e);
                 });
+            });
+        },
+
+        forSync: function () {
+            return app.data.debts.filter(function (debt) {
+                return debt.sync === 'false';
             });
         }
     }

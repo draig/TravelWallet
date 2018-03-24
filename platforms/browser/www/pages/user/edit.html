@@ -2,12 +2,14 @@
     <div data-name="user-edit" class="page">
         <div class="navbar">
             <div class="navbar-inner">
+                {{#if user.name}}
                 <div class="left">
                     <a href="#" class="back link">
                         <i class="icon icon-back"></i>
                         <span>Back</span>
                     </a>
                 </div>
+                {{/if}}
                 <div class="title">Profile</div>
                 <div class="right">
                     <a @click="create" id="user-edit-submit" href="#" class="link link-disabled">
@@ -91,6 +93,7 @@
                     app.preloader.show();
                     saveAvatar();
                     service.user.update(app.form.convertToData('#user-edit-form'), function (result) {
+                        console.log('profile finished');
                         service.init.finish('profile');
                         app.preloader.hide();
                     }, function (e) {

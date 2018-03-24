@@ -51,13 +51,15 @@ service.user = (function () {
             var userData = [
                 data.name || app.data.user.name,
                 data.ava || app.data.user.ava,
+                data.sync || app.data.user.sync,
                 data.user_id || app.data.user.user_id
             ];
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE users SET name=?, ava=?, sync=\'false\' WHERE user_id=? AND log_in=\'true\'', userData, function (tx, results) {
+                tx.executeSql('UPDATE users SET name=?, ava=?, sync=? WHERE user_id=? AND log_in=\'true\'', userData, function (tx, results) {
                     var result = app.utils.extend(app.data.user, {
                         name: userData[0],
-                        ava: userData[1]
+                        ava: userData[1],
+                        sync: userData[2]
                     });
                     success && success(result);
                 }, function (tx, e) {
@@ -84,6 +86,19 @@ service.user = (function () {
                 ava: u.ava,
                 install_app: true,
                 sync: true
+            }
+        },
+
+        forSync: function () {
+            if(app.data.user.sync === 'false') {
+                app.data.user.sync = 'pending';
+                return app.data.user;
+            }
+        },
+
+        syncback: function () {
+            if(app.data.user.sync === 'pending') {
+                service.user.update({sync: 'true'});
             }
         }
     }

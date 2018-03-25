@@ -1,5 +1,5 @@
 var $$ = Dom7,
-    endpoint = 'tcp://127.0.0.1:3000',
+    endpoint = 'http://192.168.1.40:3000',
     db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000);
 
 

@@ -28,7 +28,7 @@ service.user = (function () {
                 true,
                 data.ava || '',
                 data.auth_token,
-                true
+                'true'
             ];
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO users (user_id, device_id, phone, log_in, ava, auth_token, sync) VALUES (?, ?, ?, ?, ?, ?, ?)', userData, function (tx, results) {
@@ -38,7 +38,8 @@ service.user = (function () {
                         phone: data.phone,
                         log_in: userData[3],
                         ava: userData[4],
-                        auth_token: data.auth_token
+                        auth_token: data.auth_token,
+                        sync: userData[6]
                     };
                     success && success(result);
                 }, function (tx, e) {

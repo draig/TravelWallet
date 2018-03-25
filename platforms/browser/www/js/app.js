@@ -93,12 +93,12 @@ db.transaction(function (tx) {
 });
 
 db.transaction(function (tx) {
+    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, install_app, sync) VALUES (?, ?, ?, ?, ?)',
+        ['local-2', 'Tom Cruise', '+375296230945', '+375296230945,+375292879876', false, false]);
     tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, install_app) VALUES (?, ?, ?, ?, ?)',
-        ['local-2', 'Tom Cruise', '+375296230945', '+375296230945,+375292879876', true]);
+        ['local-3', 'Leonardo DiCaprio', '+375259085411', '+375259085411', false, false]);
     tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, install_app) VALUES (?, ?, ?, ?, ?)',
-        ['local-3', 'Leonardo DiCaprio', '+375259085411', '+375259085411', false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, install_app) VALUES (?, ?, ?, ?, ?)',
-        ['local-4', 'Jennifer Lawrence ', '+375445890980', '+375445890980', false]);
+        ['local-4', 'Jennifer Lawrence ', '+375445890980', '+375445890980', false, false]);
 });
 
 function initAppData() {

@@ -13,7 +13,7 @@ service.debt = (function () {
                 data.currency.join(','),
                 data.participant.join(','),
                 status.ACTIVE,
-                false
+                'false'
             ];
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO debts (debt_id, title, currency, participant, status, sync) VALUES (?, ?, ?, ?, ?, ?)', debtData, function (tx, results) {
@@ -71,7 +71,7 @@ service.debt = (function () {
                 data.currency.join(','),
                 data.participant.join(','),
                 data.debt_id,
-                false
+                'false'
             ];
             db.transaction(function (tx) {
                 tx.executeSql('UPDATE debts SET title=?, currency=?, participant=?, sync=? WHERE debt_id=?', debtData, function (tx, results) {

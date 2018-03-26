@@ -27,23 +27,22 @@ service.contact = (function () {
             });
         },
         
-        // update: function (success, error) {
-        //     function onSuccess(contacts) {
-        //         success && success(contacts);
-        //     }
-        //
-        //     function onError(e) {
-        //         error && error(e);
-        //     }
-        //
-        //     var options = new ContactFindOptions();
-        //     //options.filter   = "Bob";
-        //     options.multiple = true;
-        //     options.desiredFields = [navigator.contacts.fieldType.id];
-        //     options.hasPhoneNumber = true;
-        //     var fields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
-        //     navigator.contacts.find(fields, onSuccess, onError, options);
-        // },
+        sycn_w_device: function (success, error) {
+            function onSuccess(contacts) {
+                success && success(contacts);
+            }
+
+            function onError(e) {
+                error && error(e);
+            }
+
+            var options = new ContactFindOptions();
+            options.multiple = true;
+            options.desiredFields = [navigator.contacts.fieldType.id];
+            options.hasPhoneNumber = true;
+            var fields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
+            navigator.contacts.find(fields, onSuccess, onError, options);
+        },
 
         update: function (data, success, error) {
             var contactData = [

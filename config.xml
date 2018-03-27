@@ -15,7 +15,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <engine name="android" spec="^6.3" />
+    <!--<engine name="android" spec="^6.3" />-->
     <!--<engine name="ios" spec="~4.5.1" />-->
     <platform name="android">
         <preference name="android-minSdkVersion" value="14" />
@@ -30,8 +30,8 @@
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" spec="~1.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
-    <plugin name="cordova-plugin-contacts" spec="~3.0.1" />
+    <plugin name="cordova-plugin-contacts" spec="~3.0.0" />
     <plugin name="cordova-plugin-device" spec="~2.0.1" />
-    <plugin name="cordova-plugin-file" spec="~6.0.1" />
+    <plugin name="cordova-plugin-file" spec="~6.0.0" />
     <!--<plugin name="cordova-plugin-file-transfer" spec="~1.6.1"/>-->
 </widget>

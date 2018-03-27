@@ -28,8 +28,28 @@ service.contact = (function () {
             });
         },
 
+        /*{
+            addresses: null,
+            birthday: null,
+            categories: null,
+            displayName: "Сергей Солонкевич",
+            emails: null,
+            id: "1",
+            ims: null,
+            name: {familyName: "Солонкевич", givenName:"Сергей", formatted:"Сергей Солонкевич"},
+            nickname: null,
+            note: null,
+            organizations: null,
+            phoneNumbers: [{id: "7", pref: false, value: "+375297240735", type: "mobile"}, {id: "9", pref: false, value: "+375297240735", type: "mobile"}],
+            photos: null,
+            rawId: "1",
+            urls: null
+        }*/
+
         sycn_w_device: function (success, error) {
             function onSuccess(contacts) {
+                var normolized_contacts = service.contact.normalize(contacts);
+                service.contact.merge_contacts(normolized_contacts);
                 success && success(contacts);
             }
 
@@ -39,35 +59,42 @@ service.contact = (function () {
 
             var options = new ContactFindOptions();
             options.multiple = true;
-            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName,
-                navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers];
+            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/
             options.hasPhoneNumber = true;
             var fields = [navigator.contacts.fieldType.id];
             navigator.contacts.find(fields, onSuccess, onError, options);
         },
 
-        add: function () {
-            /*var contactData = [
+        normalize: function (plugin_contacts) {
+            return plugin_contacts.map(function (plugin_contact) {
+                return {
+                    id: 'local-' + plugin_contact.id,
+                    name: plugin_contact.displayName,
+                    phones: plugin_contacts.phoneNumbers.map(function (phone) { service.utils.normalizePhone(phone.value) })
+                };
+            });
+        },
+
+        add: function (contact, success, error) {
+            var contactData = [
                 data.contact_id,
                 data.name,
-                data.ava,
-                data.phone,
+                data.ava || null,
                 data.phones || [],
-                data.install_app,
-                data.sync || 'false',
-                data.contact_id
+                data.install_app || 'false',
+                data.sync || 'false'
             ];
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO contacts SET id=?, name=?, ava=?, phone=?, phones=?, install_app=?, sync=? WHERE contact_id=?', contactData, function (tx, results) {
+                tx.executeSql('INSERT INTO contacts (id, name, ava, phones, install_app, sync) VALUES (?, ?, ?, ?, ?, ?)', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
                         phones: contactData[4].split(','),
-                        sync: contactData[6]
+                        sync: contactData[5]
                     });
                     success && success(result);
                 }, function (tx, e) {
                     error && error(e);
                 });
-            });*/
+            });
         },
 
         update: function (data, success, error) {
@@ -124,9 +151,8 @@ service.contact = (function () {
 
         merge_contacts: function (device_contacts) {
             device_contacts.each(function (device_contact) {
-                var local_id = 'local-' + device_contact.id;
                 var contact_w_same_id = app.data.contacts.find(function (contact) {
-                    return contact.contact_id === local_id;
+                    return contact.contact_id === device_contact.id;
                 });
                 if (contact_w_same_id) {
                     var intersection = service.phones_intersection(contact_w_same_id.phones, device_contact.phones);
@@ -135,18 +161,11 @@ service.contact = (function () {
                     }
                 }
                 var duplicate = app.data.contacts.find(function (contact) {
-                    var intersection = [];
-                    if (contact.phones.length) {
-                        intersection = service.phones_intersection(contact.phones, contact.phone);
-                    } else {
-                        intersection = service.phones_intersection([contact.phone], contact.phone);
-                    }
-                    return !!intersection.length;
-
+                    return !!service.phones_intersection(contact.phones, contact.phone).length;
                 });
 
-                if(!duplicate) {
-
+                if (!duplicate) {
+                    service.contact.add(device_contacts);
                 }
             });
         },

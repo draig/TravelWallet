@@ -8,7 +8,7 @@
         A basic Framework7 template for PhoneGap.
     </description>
     <author email="andrew.daskhevich@gmail.com" href="http://cordova.io">
-        Apache Cordova Team
+        Andrei Dashkevich
     </author>
     <content src="index.html" />
     <access origin="*" />

@@ -39,9 +39,9 @@ service.contact = (function () {
 
             var options = new ContactFindOptions();
             options.multiple = true;
-            options.desiredFields = [navigator.contacts.fieldType.id];
+            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
             options.hasPhoneNumber = true;
-            var fields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];
+            var fields = [navigator.contacts.fieldType.id];
             navigator.contacts.find(fields, onSuccess, onError, options);
         },
 

@@ -5,7 +5,7 @@
         A basic Framework7 template for PhoneGap.
     </description>
     <author email="andrew.daskhevich@gmail.com" href="http://cordova.io">
-        Apache Cordova Team
+        Andrei Dashkevich
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -25,6 +25,7 @@
         <preference name="BackupWebStorage" value="none" />
     </platform>
     <preference name="DisallowOverscroll" value="true" />
+    <engine name="android" spec="6.1.2" />
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" spec="~1.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />

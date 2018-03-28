@@ -59,14 +59,13 @@ service.contact = (function () {
                 error && error(e);
             }
 
-            /*var options = new ContactFindOptions();
+            var options = new ContactFindOptions();
             options.multiple = true;
-            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/!*navigator.contacts.fieldType.name*!/
+            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/
             options.hasPhoneNumber = true;
             var fields = [navigator.contacts.fieldType.id];
-            navigator.contacts.find(fields, onSuccess, onError, options);*/
-
-            var contacts = [{
+            navigator.contacts.find(fields, onSuccess, onError, options);
+            /*var contacts = [{
                 addresses: null,
                 birthday: null,
                 categories: null,
@@ -83,7 +82,7 @@ service.contact = (function () {
                 rawId: "1",
                 urls: null
             }];
-            onSuccess(contacts);
+            onSuccess(contacts);*/
         },
 
         normalize: function (plugin_contacts) {

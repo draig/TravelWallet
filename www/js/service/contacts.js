@@ -46,10 +46,10 @@ service.contact = (function () {
             urls: null
         }*/
 
-        sycn_w_device: function (success, error) {
+        sync_w_device: function (success, error) {
             function onSuccess(contacts) {
-                var normolized_contacts = service.contact.normalize(contacts);
-                service.contact.merge_contacts(normolized_contacts);
+                var normalized_contacts = service.contact.normalize(contacts);
+                service.contact.merge_contacts(normalized_contacts);
                 success && success(contacts);
             }
 
@@ -80,16 +80,16 @@ service.contact = (function () {
                 data.contact_id,
                 data.name,
                 data.ava || null,
-                data.phones || [],
+                (data.phones || []).join(','),
                 data.install_app || 'false',
                 data.sync || 'false'
             ];
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO contacts (id, name, ava, phones, install_app, sync) VALUES (?, ?, ?, ?, ?, ?)', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
-                        phones: contactData[4].split(','),
                         sync: contactData[5]
                     });
+                    app.data.contacts.push(result);
                     success && success(result);
                 }, function (tx, e) {
                     error && error(e);
@@ -102,16 +102,15 @@ service.contact = (function () {
                 data.contact_id,
                 data.name,
                 data.ava,
-                data.phone,
-                data.phones || [],
+                (data.phones || []).join(','),
                 data.install_app,
                 data.sync || 'false',
                 data.local_id || data.contact_id
             ];
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE contacts SET id=?, name=?, ava=?, phone=?, phones=?, install_app=?, sync=? WHERE contact_id=?', contactData, function (tx, results) {
+                tx.executeSql('UPDATE contacts SET id=?, name=?, ava=?, phones=?, install_app=?, sync=? WHERE contact_id=?', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
-                        phones: contactData[4].split(','),
+                        //phones: contactData[4].split(','),
                         sync: contactData[6]
                     });
                     success && success(result);
@@ -161,7 +160,7 @@ service.contact = (function () {
                     }
                 }
                 var duplicate = app.data.contacts.find(function (contact) {
-                    return !!service.phones_intersection(contact.phones, contact.phone).length;
+                    return !!service.phones_intersection(contact.phones, contact.phones).length;
                 });
 
                 if (!duplicate) {

@@ -132,7 +132,8 @@ service.contact = (function () {
                 tx.executeSql('UPDATE contacts SET id=?, name=?, ava=?, phones=?, install_app=?, sync=? WHERE contact_id=?', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
                         //phones: contactData[4].split(','),
-                        sync: contactData[6]
+                        sync: contactData[6],
+                        local_id: null
                     });
                     success && success(result);
                 }, function (tx, e) {
@@ -188,13 +189,6 @@ service.contact = (function () {
                     service.contact.add(device_contact);
                 }
             });
-        },
-
-        phones_intersection: function (first_phones, second_phone) {
-            var intersection = first_phones.filter(function (n) {
-                return second_phone.indexOf(n) !== -1;
-            });
-            return intersection;
         }
     }
 })();

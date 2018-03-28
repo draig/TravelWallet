@@ -19,6 +19,9 @@ service.sync = (function () {
 
     function syncback() {
         service.user.syncback();
+        data.contacts && service.contact.syncback(data.contacts);
+        data.debts && service.debt.syncback(data.debts);
+        data.payments && service.payments.syncback(data.payments);
     }
 
     return {
@@ -31,8 +34,7 @@ service.sync = (function () {
         attempt: function(success, error) {
             console.log('start sync');
             app.request.post(endpoint + '/sync', getData(), function (data) {
-                syncback();
-                console.log(data);
+                syncback(data);
                 success && success(data);
             }, function (e) {
                 error && error(e);

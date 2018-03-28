@@ -70,7 +70,7 @@ service.contact = (function () {
                 return {
                     id: 'local-' + plugin_contact.id,
                     name: plugin_contact.displayName,
-                    phones: plugin_contacts.phoneNumber.map(function (phone) { service.utils.normalizePhone(phone.value) })
+                    phones: plugin_contact.phoneNumbers.map(function (phone) { return utils.normalizePhone(phone.value) })
                 };
             });
         },
@@ -130,7 +130,7 @@ service.contact = (function () {
         },
 
         syncback: function (synced_contacts) {
-            synced_contacts.each(function (synced_contact) {
+            synced_contacts.forEach(function (synced_contact) {
                 var local_contact = service.contact.get(synced_contact.local_id);
                 service.contact.update(app.utils.extend({}, local_contact, {
                     install_app: true,
@@ -139,7 +139,7 @@ service.contact = (function () {
                     local_contact = result;
                 });
             });
-            app.data.contacts.each(function (contact) {
+            app.data.contacts.forEach(function (contact) {
                 if (contact.sync === 'pending') {
                     service.contact.update(app.utils.extend({}, contact, {sync: 'true'}), function (result) {
                         contact = result;
@@ -149,7 +149,7 @@ service.contact = (function () {
         },
 
         merge_contacts: function (device_contacts) {
-            device_contacts.each(function (device_contact) {
+            device_contacts.forEach(function (device_contact) {
                 var contact_w_same_id = app.data.contacts.find(function (contact) {
                     return contact.contact_id === device_contact.id;
                 });

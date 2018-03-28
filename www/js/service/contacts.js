@@ -70,7 +70,7 @@ service.contact = (function () {
                 return {
                     id: 'local-' + plugin_contact.id,
                     name: plugin_contact.displayName,
-                    phones: plugin_contacts.phoneNumber.map(function (phone) { utils.normalizePhone(phone.value) })
+                    phones: plugin_contact.phoneNumbers.map(function (phone) { utils.normalizePhone(phone.value) })
                 };
             });
         },

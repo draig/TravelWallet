@@ -14,7 +14,7 @@ service.sync = (function () {
 
         data.payments = service.payment.forSync();
         if(!data.payments.length) delete data.payments;
-        return JSON.stringify(data);
+        return data;
     }
 
     function syncback() {
@@ -26,19 +26,19 @@ service.sync = (function () {
 
     return {
         start: function (success, error) {
-            Framework7.request.setup({headers: {'Authorization': app.data.user.auth_token}, timeout: 2000});
+            Framework7.request.setup({headers: {'Authorization': app.data.user.auth_token}, contentType: 'application/json'});
             setInterval(service.sync.attempt, 20000);
             service.sync.attempt(success, error);
         },
 
         attempt: function(success, error) {
             console.log('start sync');
-            app.request.post(endpoint + '/sync', getData(), function (data) {
+            app.request.postJSON(endpoint + '/sync', getData(), function (data) {
                 syncback(data);
                 success && success(data);
             }, function (e) {
                 error && error(e);
-            }, 'json');
+            });
         }
     }
 })();

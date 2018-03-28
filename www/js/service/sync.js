@@ -14,7 +14,7 @@ service.sync = (function () {
 
         data.payments = service.payment.forSync();
         if(!data.payments.length) delete data.payments;
-        return data;
+        return JSON.stringify(data);
     }
 
     function syncback() {
@@ -26,7 +26,7 @@ service.sync = (function () {
 
     return {
         start: function (success, error) {
-            Framework7.request.setup({headers: {'Authorization': app.data.user.auth_token}});
+            Framework7.request.setup({headers: {'Authorization': app.data.user.auth_token}, timeout: 2000});
             setInterval(service.sync.attempt, 20000);
             service.sync.attempt(success, error);
         },

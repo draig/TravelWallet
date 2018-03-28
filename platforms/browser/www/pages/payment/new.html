@@ -5,13 +5,16 @@
                 <div class="left">
                     <a href="#" class="back link">
                         <i class="icon icon-back"></i>
-                        <span>Back</span>
+                        <span class="ios-only">Back</span>
                     </a>
                 </div>
                 <div class="title">New payment</div>
                 <div class="right">
                     <a @click="create" id="payment-new-submit" href="#" class="link link-disabled">
-                        <span>Done</span>
+                        {{#if device.android}}
+                        <i class="f7-icons">check</i>
+                        {{/if}}
+                        <span class="ios-only">Done</span>
                     </a>
                 </div>
             </div>
@@ -57,7 +60,7 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
-                           data-searchbar="true" data-searchbar-placeholder="141 contacts">
+                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="payer" @change="change" required>
                                 <option value="{{user.user_id}}">You</option>
                                 {{#each contacts}}
@@ -74,7 +77,7 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
-                           data-searchbar="true" data-searchbar-placeholder="141 contacts">
+                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="participant" @change="change" required multiple>
                                 <option value="{{user.user_id}}">You</option>
                                 {{#each contacts}}
@@ -115,7 +118,8 @@
             return {
                 currencies: service.currency.getByIds(debt.currency),
                 contacts: service.contact.getByIds(debt.participant),
-                user: app.data.user
+                user: app.data.user,
+                device: app.device
             };
         },
         methods: {

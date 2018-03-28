@@ -8,7 +8,9 @@ service.contact = (function () {
         list: function (success, error) {
             db.transaction(function (tx) {
                 tx.executeSql('SELECT * FROM contacts', [], function (tx, results) {
-                    success && success(utils.sqlResultSetToArray(results));
+                    var contacts = utils.sqlResultSetToArray(results);
+                    contacts.forEach(function (contact) { contact.phones =  contact.phones.split(',')});
+                    success && success(contacts);
                 }, function (tx, e) {
                     error && error(e);
                 });
@@ -57,25 +59,44 @@ service.contact = (function () {
                 error && error(e);
             }
 
-            var options = new ContactFindOptions();
+            /*var options = new ContactFindOptions();
             options.multiple = true;
-            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/
+            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/!*navigator.contacts.fieldType.name*!/
             options.hasPhoneNumber = true;
             var fields = [navigator.contacts.fieldType.id];
-            navigator.contacts.find(fields, onSuccess, onError, options);
+            navigator.contacts.find(fields, onSuccess, onError, options);*/
+
+            var contacts = [{
+                addresses: null,
+                birthday: null,
+                categories: null,
+                displayName: "Сергей Солонкевич",
+                emails: null,
+                id: "1",
+                ims: null,
+                name: {familyName: "Солонкевич", givenName:"Сергей", formatted:"Сергей Солонкевич"},
+                nickname: null,
+                note: null,
+                organizations: null,
+                phoneNumbers: [{id: "7", pref: false, value: "+375297240735", type: "mobile"}, {id: "9", pref: false, value: "+375297240735", type: "mobile"}],
+                photos: null,
+                rawId: "1",
+                urls: null
+            }];
+            onSuccess(contacts);
         },
 
         normalize: function (plugin_contacts) {
             return plugin_contacts.map(function (plugin_contact) {
                 return {
-                    id: 'local-' + plugin_contact.id,
+                    contact_id: 'local-' + plugin_contact.id,
                     name: plugin_contact.displayName,
                     phones: plugin_contact.phoneNumbers.map(function (phone) { return utils.normalizePhone(phone.value) })
                 };
             });
         },
 
-        add: function (contact, success, error) {
+        add: function (data, success, error) {
             var contactData = [
                 data.contact_id,
                 data.name,
@@ -85,7 +106,7 @@ service.contact = (function () {
                 data.sync || 'false'
             ];
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO contacts (id, name, ava, phones, install_app, sync) VALUES (?, ?, ?, ?, ?, ?)', contactData, function (tx, results) {
+                tx.executeSql('INSERT INTO contacts (contact_id, name, ava, phones, install_app, sync) VALUES (?, ?, ?, ?, ?, ?)', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
                         sync: contactData[5]
                     });
@@ -151,20 +172,20 @@ service.contact = (function () {
         merge_contacts: function (device_contacts) {
             device_contacts.forEach(function (device_contact) {
                 var contact_w_same_id = app.data.contacts.find(function (contact) {
-                    return contact.contact_id === device_contact.id;
+                    return contact.contact_id === device_contact.contact_id;
                 });
                 if (contact_w_same_id) {
-                    var intersection = service.phones_intersection(contact_w_same_id.phones, device_contact.phones);
+                    var intersection = utils.intersection(contact_w_same_id.phones, device_contact.phones);
                     if (intersection.length) {
                         return;
                     }
                 }
                 var duplicate = app.data.contacts.find(function (contact) {
-                    return !!service.phones_intersection(contact.phones, contact.phones).length;
+                    return !!utils.intersection(device_contact.phones, contact.phones).length;
                 });
 
                 if (!duplicate) {
-                    service.contact.add(device_contacts);
+                    service.contact.add(device_contact);
                 }
             });
         },

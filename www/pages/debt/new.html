@@ -11,7 +11,10 @@
                 <div class="title">New debt book</div>
                 <div class="right">
                     <a @click="create" id="new-debt-submit" href="#" class="link link-disabled">
-                        <span>Done</span>
+                        {{#if device.android }}
+                        <i class="f7-icons">check</i>
+                        {{/if}}
+                        <span class="ios-only">Done</span>
                     </a>
                 </div>
             </div>
@@ -32,7 +35,7 @@
                     <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
-                           data-searchbar-placeholder="141 contacts">
+                           data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="participant" @change="change" required multiple>
                                 <option selected disabled value="{{user.user_id}}">You</option>
                                 {{#each contacts}}
@@ -85,7 +88,7 @@
 
     return {
         data: function () {
-            return app.data;
+            return app.utils.extend({}, app.data, {device: app.device});
         },
         methods: {
             create: function () {

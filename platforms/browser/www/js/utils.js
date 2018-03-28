@@ -45,6 +45,13 @@ var utils = (function () {
         
         normalizePhone: function (phone) {
             return '+' + phone.replace(/[^0-9]/g, '');
+        },
+
+        intersection: function (first_arr, second_arr) {
+            var intersection = first_arr.filter(function (n) {
+                return second_arr.indexOf(n) !== -1;
+            });
+            return intersection;
         }
     }
 })();

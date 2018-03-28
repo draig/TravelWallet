@@ -14,10 +14,6 @@
     background: #000000;
 }
 
-/*input[name="phone"]:before {
-    content:"€";
-}*/
-
 p.text {
     text-align: center;
 }
@@ -26,7 +22,8 @@ p.text {
     margin-top: 0;
 }
 
-.ios a.link.link-disabled {
+/*.ios a.link.link-disabled {*/
+a.link.link-disabled {
     opacity: .3;
 }
 

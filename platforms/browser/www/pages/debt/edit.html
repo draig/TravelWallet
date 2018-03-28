@@ -108,7 +108,6 @@
         on: {
             pageInit: function (e, page) {
                 app.form.fillFromData('#debt-edit-form', service.debt.get(this.$route.params.debt_id));
-                service.contact.sycn_w_device();
             }
         }
     };

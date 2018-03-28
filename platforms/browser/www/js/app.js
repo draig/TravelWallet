@@ -149,7 +149,10 @@ function initAppData() {
     }], 'debt');
 
     var finishSync = service.init.finish.bind({}, 'sync');
-    service.init.add(service.sync.start, [finishSync, finishSync], 'sync', ['contact', 'payments', 'debt', 'login']);
+    service.init.add(service.sync.start, [finishSync, finishSync], 'sync', ['contact', 'payments', 'debt', 'login', 'sync_contacts']);
+
+    var finishSyncContacts = service.init.finish.bind({}, 'sync_contacts');
+    service.init.add(service.contact.sync_w_device, [finishSyncContacts, finishSyncContacts], 'sync_contacts', ['contact']);
 
     service.init.start(function () {
         app.views.current.router.navigate('/debt/list/', {

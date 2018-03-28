@@ -41,6 +41,10 @@ var utils = (function () {
                     fileWriter.write(blob);
                 });
             });
+        },
+        
+        normalizePhone: function (phone) {
+            return '+' + phone.replace(/[^0-9]/g, '');
         }
     }
 })();

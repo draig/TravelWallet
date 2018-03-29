@@ -59,14 +59,17 @@ service.contact = (function () {
                 error && error(e);
             }
 
-            /*var options = new ContactFindOptions();
+            if(device.platform === 'browser') {
+                return onSuccess([]);
+            }
+
+            var options = new ContactFindOptions();
             options.multiple = true;
-            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/!*navigator.contacts.fieldType.name*!/
+            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/
             options.hasPhoneNumber = true;
             var fields = [navigator.contacts.fieldType.id];
-            navigator.contacts.find(fields, onSuccess, onError, options);*/
-
-            var contacts = [{
+            navigator.contacts.find(fields, onSuccess, onError, options);
+            /*var contacts = [{
                 addresses: null,
                 birthday: null,
                 categories: null,
@@ -83,7 +86,7 @@ service.contact = (function () {
                 rawId: "1",
                 urls: null
             }];
-            onSuccess(contacts);
+            onSuccess(contacts);*/
         },
 
         normalize: function (plugin_contacts) {
@@ -132,7 +135,8 @@ service.contact = (function () {
                 tx.executeSql('UPDATE contacts SET id=?, name=?, ava=?, phones=?, install_app=?, sync=? WHERE contact_id=?', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
                         //phones: contactData[4].split(','),
-                        sync: contactData[6]
+                        sync: contactData[6],
+                        local_id: null
                     });
                     success && success(result);
                 }, function (tx, e) {
@@ -188,13 +192,6 @@ service.contact = (function () {
                     service.contact.add(device_contact);
                 }
             });
-        },
-
-        phones_intersection: function (first_phones, second_phone) {
-            var intersection = first_phones.filter(function (n) {
-                return second_phone.indexOf(n) !== -1;
-            });
-            return intersection;
         }
     }
 })();

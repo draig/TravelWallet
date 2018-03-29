@@ -127,7 +127,6 @@
                 console.log(!$$('#payment-new-submit').hasClass('link-disabled'));
                 if(!$$('#payment-new-submit').hasClass('link-disabled')) {
                     service.payment.create(app.form.convertToData('#payment-new-form'), function (result) {
-                        app.data.payments.push(result);
                         app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', this.$route.params.debt_id), {
                             reloadCurrent: true,
                             ignoreCache: true,

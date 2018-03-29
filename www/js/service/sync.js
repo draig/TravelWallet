@@ -14,10 +14,10 @@ service.sync = (function () {
 
         data.payments = service.payment.forSync();
         if(!data.payments.length) delete data.payments;
-        return data;
+        return JSON.stringify(data);
     }
 
-    function syncback() {
+    function syncback(data) {
         service.user.syncback();
         data.contacts && service.contact.syncback(data.contacts);
         data.debts && service.debt.syncback(data.debts);

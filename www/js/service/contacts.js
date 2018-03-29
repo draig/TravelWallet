@@ -59,6 +59,10 @@ service.contact = (function () {
                 error && error(e);
             }
 
+            if(device.platform === 'browser') {
+                return onSuccess([]);
+            }
+
             var options = new ContactFindOptions();
             options.multiple = true;
             options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/

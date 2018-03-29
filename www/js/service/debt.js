@@ -19,8 +19,8 @@ service.debt = (function () {
                 tx.executeSql('INSERT INTO debts (debt_id, title, currency, participant, status, sync) VALUES (?, ?, ?, ?, ?, ?)', debtData, function (tx, results) {
                     var result = app.utils.extend(data, {
                         debt_id: debtData[0],
-                        status: debtData[5],
-                        sync: debtData[6]
+                        status: debtData[4],
+                        sync: debtData[5]
                     });
                     success && success(result);
                 }, function (e) {
@@ -92,13 +92,13 @@ service.debt = (function () {
 
         syncback: function (synced_debts) {
             synced_debts.forEach(function (synced_debt) {
-                app.utils.extend(synced_debts, {sync: true});
+                app.utils.extend(synced_debt, {sync: true});
                 if(synced_debt.local_id) {
                     service.debt.update(synced_debt);
                 } else if (service.debt.get(synced_debt.debt_id)) {
                     service.debt.update(synced_debt);
                 } else {
-                    service.debt.create(synced_debts);
+                    service.debt.create(synced_debt);
                 }
             });
         }

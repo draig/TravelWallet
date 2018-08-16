@@ -37,7 +37,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">Amount</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="number" name="amount" required validate placeholder="Payment amount">
+                                <input @change="change" type="number" step="0.01" name="amount" required validate placeholder="Payment amount">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -124,13 +124,13 @@
         },
         methods: {
             create: function () {
-                console.log(!$$('#payment-new-submit').hasClass('link-disabled'));
                 if(!$$('#payment-new-submit').hasClass('link-disabled')) {
                     service.payment.create(app.form.convertToData('#payment-new-form'), function (result) {
                         app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', this.$route.params.debt_id), {
-                            reloadCurrent: true,
-                            ignoreCache: true,
-                            history: false
+//                            reloadCurrent: true,
+//                            ignoreCache: true,
+//                            history: false,
+                            reloadAll: true
                         });
                     }.bind(this));
                 }

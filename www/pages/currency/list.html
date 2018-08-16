@@ -1,0 +1,68 @@
+<template>
+    <div data-name="debt-show" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="/debt/list/" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span class="ios-only">Back</span>
+                    </a>
+                </div>
+                <div class="title">Currency Rates</div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="data-table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="label-cell">From</th>
+                        <th class="label-cell">To</th>
+                        <th class="numeric-cell">Rate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each currencies}}
+                    <tr>
+                        <td class="label-cell">{{format_currency from}}</td>
+                        <td class="label-cell">{{format_currency to}}</td>
+                        <td class="numeric-cell">{{rate}}</td>
+                    </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+    .payment-list .item-media img {
+        border-radius: 50%;
+    }
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+
+    return {
+        data: function () {
+            var currencies = [];
+
+            for (var cyrrency_from in app.data.currency_rates) {
+                for (var cyrrency_to in app.data.currency_rates[cyrrency_from]) {
+                    currencies.push({
+                        from: cyrrency_from,
+                        to: cyrrency_to,
+                        rate: app.data.currency_rates[cyrrency_from][cyrrency_to]
+                    });
+                }
+            }
+
+            return {
+                currencies: currencies
+            }
+        }
+    };
+</script>

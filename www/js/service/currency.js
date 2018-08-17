@@ -47,6 +47,9 @@ service.currency = (function () {
         },
 
         exchange: function (from_currency_id, to_currency_id, amount) {
+            // TODO review amount value. Must be numeric everywhere
+            amount = +amount;
+
             if (from_currency_id === to_currency_id) {
                 return amount;
             } else if(app.data.currency_rates[from_currency_id] && app.data.currency_rates[from_currency_id][to_currency_id]) {

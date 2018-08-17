@@ -18,24 +18,25 @@ service.engine = (function () {
 
     return {
 
-        calculate: function (debt_id) {
+        calculate: function (debt_id, currency_id) {
             var payments = service.payment.getByDebtId(debt_id),
                 paymentMap = {},
                 creditors = [],
                 debtors = [],
                 debtBook = [];
 
-            if(debtBookCache[debt_id] && (debtBookCache[debt_id].hash === payments.join().hashCode())) {
-                return debtBookCache[debt_id].book;
+            if(debtBookCache[debt_id] && debtBookCache[debt_id][currency_id] &&
+                (debtBookCache[debt_id][currency_id].hash === JSON.stringify(payments).hashCode())) {
+                return debtBookCache[debt_id][currency_id].book;
             }
 
             payments.forEach(function (payment) {
                 addToDebtMap(paymentMap, payment.payer);
-                paymentMap[payment.payer].pay += payment.amount;
+                paymentMap[payment.payer].pay += service.currency.exchange(payment.currency, currency_id, payment.amount);
 
                 payment.participant.forEach(function (part) {
                     addToDebtMap(paymentMap, part);
-                    paymentMap[part].owe += payment.amount / payment.participant.length;
+                    paymentMap[part].owe += service.currency.exchange(payment.currency, currency_id, payment.amount) / payment.participant.length;
                 });
             });
 
@@ -73,7 +74,7 @@ service.engine = (function () {
                 });
             }
 
-            debtBookCache[debt_id] = {
+            (debtBookCache[debt_id]||(debtBookCache[debt_id] = {}))[currency_id] = {
                 hash: payments.join().hashCode(),
                 book: debtBook
             };

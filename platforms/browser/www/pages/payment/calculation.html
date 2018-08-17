@@ -1,40 +1,43 @@
 <template>
-    <div class="list media-list debt-list">
-        {{#if book.length}}
-        <ul>
-            {{#each book}}
-            <li>
-                <a href="#" class="item-link item-content">
-                    <div class="item-inner">
-                        <div class="item-title-row">
-                            <div class="item-subtitle">
-                                <span>{{name debtor}}</span>
-                                <span class="owe-separator">owe to</span>
-                                <span>{{name creditor}}</span></div>
+    <div>
+        <div class="list currency-selector">
+            <ul>
+                <li>
+                    <a class="item-link smart-select smart-select-init" data-open-in="popup">
+                        <select name="currency" @change="recalculate" required>
+                            {{#each currencies}}
+                            <option value="{{this.currency_id}}">{{this.title}}</option>
+                            {{/each}}
+                        </select>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title">Currency</div>
+                            </div>
                         </div>
-                        <div class="item-row calculation-total justify-content-flex-start">
-                            <span>{{format_amount amount}}</span>
-                            <span class="calculation-total-currency">USD</span>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            {{/each}}
-        </ul>
-        {{/if}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="list media-list debt-list"/>
     </div>
 </template>
 
 <style>
-
+    .debt-list {
+        margin: 0 !important;
+    }
+    .debt-list .item-title-row {
+        background-image: none !important;
+    }
+    .currency-selector {
+        margin-bottom: 0 !important;
+    }
     .owe-separator {
         color: #8e8e93;
     }
-
     .calculation-total {
         font-size: 18px;
     }
-
     .calculation-total-currency {
         padding-left: 3px;
         color: #808080;
@@ -43,12 +46,53 @@
 
 <!--suppress JSAnnotator -->
 <script>
+    var debt, compiledTemplate = Template7.compile(
+            '{{#if book.length}}\n' +
+            '<ul>\n' +
+            '    {{#each book}}\n' +
+            '    <li>\n' +
+            '        <a href="#" class="item-link item-content">\n' +
+            '            <div class="item-inner">\n' +
+            '                <div class="item-title-row">\n' +
+            '                    <div class="item-subtitle">\n' +
+            '                        <span>{{name debtor}}</span>\n' +
+            '                        <span class="owe-separator">owe to</span>\n' +
+            '                        <span>{{name creditor}}</span></div>\n' +
+            '                </div>\n' +
+            '                <div class="item-row calculation-total justify-content-flex-start">\n' +
+            '                    <span>{{format_amount amount}}</span>\n' +
+            '                    <span class="calculation-total-currency">{{currency ../currency_id}}</span>\n' +
+            '                </div>\n' +
+            '            </div>\n' +
+            '        </a>\n' +
+            '    </li>\n' +
+            '    {{/each}}\n' +
+            '</ul>\n' +
+            '{{/if}}');
+
+    function updateDebtList() {
+        var currency = service.currency.get($$('[name="currency"]').val());
+        $$('.debt-list').html(compiledTemplate({
+            book: service.engine.calculate(debt.debt_id, currency.currency_id),
+            currency_id: currency.currency_id
+        }));
+    }
 
     return {
-
         data: function () {
+            debt = service.debt.get(this.$route.params.debt_id);
             return {
-                book: service.engine.calculate(this.$route.params.debt_id)
+                currencies: service.currency.getByIds(debt.currency)
+            }
+        },
+        methods: {
+            recalculate: function () {
+                updateDebtList();
+            }
+        },
+        on: {
+            tabMounted: function (newTabEl, tabRoute) {
+                updateDebtList();
             }
         }
     };

@@ -1,0 +1,151 @@
+<template>
+    <div data-name="payment-edit" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span class="ios-only">Back</span>
+                    </a>
+                </div>
+                <div class="title">Edit payment</div>
+                <div class="right">
+                    <a @click="update" id="payment-edit-submit" href="#" class="link link-disabled">
+                        {{#if device.android}}
+                        <i class="f7-icons">check</i>
+                        {{/if}}
+                        <span class="ios-only">Done</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form class="list no-hairlines-md" id="payment-edit-form">
+                <input type="hidden" name="payment_id" value="{{$route.params.payment_id}}">
+                <ul>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Title</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="text" name="title" required validate placeholder="Payment title">
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Amount</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="number" step="0.01" name="amount" required validate placeholder="Payment amount">
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup">
+                            <select name="currency" @change="change" required>
+                                {{#each currencies}}
+                                    <option value="{{this.currency_id}}">{{this.title}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Currency</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <il>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
+                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
+                            <select name="payer" @change="change" required>
+                                <option value="{{user.user_id}}">You</option>
+                                {{#each contacts}}
+                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Payer</div>
+                                </div>
+                            </div>
+                        </a>
+                    </il>
+
+                    <il>
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
+                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
+                            <select name="participant" @change="change" required multiple>
+                                <option value="{{user.user_id}}">You</option>
+                                {{#each contacts}}
+                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Participants</div>
+                                </div>
+                            </div>
+                        </a>
+                    </il>
+                </ul>
+            </form>
+        </div>
+    </div>
+</template>
+
+<style>
+
+</style>
+
+<!--suppress JSAnnotator -->
+<script>
+    var payment, debt;
+
+    function validate() {
+        var formData = app.form.convertToData('#payment-edit-form');
+        if(formData.title && formData.amount && formData.currency && formData.participant.length && formData.payer) {
+            $$('#payment-edit-submit').removeClass('link-disabled');
+        } else {
+            $$('#payment-edit-submit').addClass('link-disabled');
+        }
+    }
+
+    return {
+        data: function () {
+            payment = service.payment.get(this.$route.params.payment_id);
+            debt = service.debt.get(payment.debt_id);
+
+            return {
+                currencies: service.currency.getByIds(debt.currency),
+                contacts: service.contact.getByIds(debt.participant),
+                user: app.data.user,
+                device: app.device
+            };
+        },
+        methods: {
+            update: function () {
+                if(!$$('#payment-edit-submit').hasClass('link-disabled')) {
+                    service.payment.update(app.form.convertToData('#payment-edit-form'), function (result) {
+                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', payment.debt_id), {
+                            reloadCurrent: true,
+                            ignoreCache: true,
+                            history: false
+                        });
+                    }.bind(this));
+                }
+            },
+            change: function () {
+                validate();
+            }
+        },
+        on: {
+            pageInit: function (e, page) {
+                app.form.fillFromData('#payment-edit-form', payment);
+            }
+        }
+    };
+</script>

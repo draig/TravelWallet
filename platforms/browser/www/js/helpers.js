@@ -14,6 +14,12 @@ Template7.registerHelper('format_currency', function (id, options) {
     return service.currency.get(id).title;
 });
 
+Template7.registerHelper('currency', function (id, options) {
+    if (typeof id === 'function') id = id.call(this);
+    var currency = service.currency.get(id)
+    return currency.sign || currency.title;
+});
+
 Template7.registerHelper('avatar', function (contact_id) {
     if (typeof contact_id === 'function') contact_id = contact_id.call(this);
     return service.contact.get(contact_id).ava;

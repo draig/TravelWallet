@@ -49,26 +49,28 @@ service.contact = (function () {
         }*/
 
         sync_w_device: function (success, error) {
-            function onSuccess(contacts) {
-                var normalized_contacts = service.contact.normalize(contacts);
-                service.contact.merge_contacts(normalized_contacts);
-                success && success(contacts);
-            }
+            // TODO remove hot fix
+            // function onSuccess(contacts) {
+            //     var normalized_contacts = service.contact.normalize(contacts);
+            //     service.contact.merge_contacts(normalized_contacts);
+            //     success && success(contacts);
+            // }
+            //
+            // function onError(e) {
+            //     error && error(e);
+            // }
+            //
+            // if(device.platform === 'browser') {
+            //     return onSuccess([]);
+            // }
+            //
+            // var options = new ContactFindOptions();
+            // options.multiple = true;
+            // options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/
+            // options.hasPhoneNumber = true;
+            // var fields = [navigator.contacts.fieldType.id];
+            // navigator.contacts.find(fields, onSuccess, onError, options);
 
-            function onError(e) {
-                error && error(e);
-            }
-
-            if(device.platform === 'browser') {
-                return onSuccess([]);
-            }
-
-            var options = new ContactFindOptions();
-            options.multiple = true;
-            options.desiredFields = [navigator.contacts.fieldType.id, navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.phoneNumbers];/*navigator.contacts.fieldType.name*/
-            options.hasPhoneNumber = true;
-            var fields = [navigator.contacts.fieldType.id];
-            navigator.contacts.find(fields, onSuccess, onError, options);
             /*var contacts = [{
                 addresses: null,
                 birthday: null,

@@ -44,7 +44,7 @@
                     </li>
 
                     <li>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup">
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true">
                             <select name="currency" @change="change" required>
                                 {{#each currencies}}
                                     <option value="{{this.currency_id}}">{{this.title}}</option>
@@ -59,7 +59,7 @@
                     </li>
 
                     <il>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
+                        <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true"
                            data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="payer" @change="change" required>
                                 <option value="{{user.user_id}}">You</option>
@@ -76,7 +76,7 @@
                     </il>
 
                     <il>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
+                        <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
                            data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="participant" @change="change" required multiple>
                                 <option value="{{user.user_id}}">You</option>
@@ -145,6 +145,37 @@
         on: {
             pageInit: function (e, page) {
                 app.form.fillFromData('#payment-edit-form', payment);
+
+                $$('.smart-select-participant').on('smartselect:open', function () {
+                    var $$page = $$('.smart-select-page'),
+                        option_count = $$page.find('input[type="checkbox"]').length,
+                        select_all = true;
+
+                    function isCheckedMore() {
+                        return $$page.find('input[type="checkbox"]:checked').length > option_count / 2
+                    }
+
+                    $$page.addClass('page-with-select-all');
+                    $$page.find('.page-content').prepend('<div class="select-all"><a class="link" href="#">select all</a></div>');
+
+                    $$page.on('change', 'input[type="checkbox"]', function () {
+                        if(isCheckedMore() && select_all) {
+                            $$page.find('.select-all a').text('unselect all');
+                            select_all = false;
+                            console.log('unselect all');
+                        } else if (!isCheckedMore() && !select_all) {
+                            $$page.find('.select-all a').text('select all');
+                            select_all = true;
+                            console.log('select all');
+                        }
+                    });
+
+                    $$page.find('.select-all a').click(function () {
+                        $$page.find('input[type="checkbox"]').prop('checked', select_all).trigger('change');
+                    });
+
+                    $$page.find('input[type="checkbox"]').eq(0).trigger('change');
+                });
             }
         }
     };

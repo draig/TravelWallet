@@ -33,13 +33,12 @@
                     </li>
 
                     <il>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
-                           data-searchbar="true"
-                           data-searchbar-placeholder="{{contacts.length}} contacts">
+                        <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
+                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="participant" @change="change" required multiple>
                                 <option selected disabled value="{{user.user_id}}">You</option>
                                 {{#each contacts}}
-                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                <option value="{{this.contact_id}}">{{this.name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -49,13 +48,14 @@
                             </div>
                         </a>
                     </il>
+
                     <li>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
                            data-searchbar-placeholder="Currency search">
                             <select name="currency" @change="change" required multiple>
                                 {{#each currencies}}
-                                    <option value="{{this.currency_id}}">{{this.title}}</option>
+                                <option value="{{this.currency_id}}">{{this.title}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -77,9 +77,11 @@
 
 <!--suppress JSAnnotator -->
 <script>
+    var compiledTemplate = Template7.compile('<option value="{{contact_id}}">{{name}}</option>');
+
     function validate() {
         var formData = app.form.convertToData('#new-debt-form');
-        if(formData.title && formData.currency.length && formData.participant.length) {
+        if (formData.title && formData.currency.length && formData.participant.length) {
             $$('#new-debt-submit').removeClass('link-disabled');
         } else {
             $$('#new-debt-submit').addClass('link-disabled');
@@ -92,7 +94,7 @@
         },
         methods: {
             create: function () {
-                if(!$$('#new-debt-submit').hasClass('link-disabled')) {
+                if (!$$('#new-debt-submit').hasClass('link-disabled')) {
                     service.debt.create(app.form.convertToData('#new-debt-form'), function (result) {
                         app.data.debts.push(result);
                         app.views.current.router.navigate('/debt/list/', {
@@ -104,6 +106,29 @@
             },
             change: function () {
                 validate();
+            }
+        },
+        on: {
+            pageInit: function () {
+                $$('.smart-select-participant').on('smartselect:open', function () {
+                    $$('.smart-select-page').prepend('<div class="fab fab-right-bottom color-blue"><a href="#"><i class="icon f7-icons">add</i></a></div>');
+
+                    $$('.smart-select-page .fab').click(function () {
+                        app.smartSelect.close('.smart-select-participant');
+                        app.popup.contact_new_popup.open();
+
+
+                        app.popup.contact_new_popup.once('close', function (e, popup) {
+                            app.data.contacts.forEach(function (contact) {
+                                if (!$$('.smart-select-participant option[value=":contact_id"]'.replace(':contact_id', contact.contact_id)).length) {
+                                    $$('.smart-select-participant select').append(compiledTemplate(contact));
+                                }
+                            });
+
+                            app.smartSelect.open('.smart-select-participant');
+                        });
+                    });
+                });
             }
         }
     };

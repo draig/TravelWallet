@@ -103,7 +103,7 @@ service.contact = (function () {
 
         add: function (data, success, error) {
             var contactData = [
-                data.contact_id,
+                data.contact_id || 'local-' + utils.uuid(),
                 data.name,
                 data.ava || null,
                 (data.phones || []).join(','),
@@ -113,6 +113,9 @@ service.contact = (function () {
             db.transaction(function (tx) {
                 tx.executeSql('INSERT INTO contacts (contact_id, name, ava, phones, install_app, sync) VALUES (?, ?, ?, ?, ?, ?)', contactData, function (tx, results) {
                     var result = app.utils.extend({}, data, {
+                        contact_id: contactData[0],
+                        ava: contactData[2],
+                        install_app: contactData[4],
                         sync: contactData[5]
                     });
                     app.data.contacts.push(result);

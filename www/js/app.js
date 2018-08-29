@@ -12,23 +12,6 @@ var app = new Framework7({
         swipe: 'left'
     },
 
-    // smartSelect: {
-    //     renderPopup: function () {
-    //         var ss = this;
-    //         var pageTitle = ss.params.pageTitle;
-    //         if (typeof pageTitle === 'undefined') {
-    //             pageTitle = ss.$el.find('.item-title').text().trim();
-    //         }
-    //         var popupHtml = "\n      <div class=\"popup smart-select-popup\" data-select-name=\"" + (ss.selectName) + "\">\n        <div class=\"view\">\n          <div class=\"page smart-select-page" + (ss.params.searchbar ? ' page-with-subnavbar' : '') + (ss.params.selectall ? ' page-with-select-all' : '') + "\" data-name=\"smart-select-page\">\n            <div class=\"navbar" + (ss.params.navbarColorTheme ? ("theme-" + (ss.params.navbarColorTheme)) : '') + "\">\n              <div class=\"navbar-inner sliding\">\n                <div class=\"left\">\n                  <a href=\"#\" class=\"link popup-close\">\n                    <i class=\"icon icon-back\"></i>\n                    <span class=\"ios-only\">" + (ss.params.popupCloseLinkText) + "</span>\n                  </a>\n                </div>\n                " + (pageTitle ? ("<div class=\"title\">" + pageTitle + "</div>") : '') + "\n                " + (ss.params.searchbar ? ("<div class=\"subnavbar\">" + (ss.renderSearchbar()) + "</div>") : '') + "\n              </div>\n            </div>\n            " + (ss.params.searchbar ? '<div class="searchbar-backdrop"></div>' : '') + "\n            <div class=\"page-content\">\n              " + (ss.params.selectall ? "<div class=\"select-all\" style=\"text-align:  center;\">\n<a class=\"link\" href=\"#\" style=\"margin-top: 16px;font-size: 16px;\">select all</a>\n</div>\n" : '') + "<div class=\"list smart-select-list-" + (ss.id) + " " + (ss.params.virtualList ? ' virtual-list' : '') + (ss.params.formColorTheme ? ("theme-" + (ss.params.formColorTheme)) : '') + "\">\n                <ul>" + (!ss.params.virtualList && ss.renderItems(ss.items)) + "</ul>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n    ";
-    //         return popupHtml;
-    //     },
-    //     on: {
-    //         opened: function () {
-    //             console.log('open');
-    //         }
-    //     }
-    // },
-
     routes: [
         {
             path: '/login-screen/',
@@ -201,6 +184,43 @@ function initAppData() {
         app.data.debts = debts;
         service.init.finish('debt');
     }], 'debt');
+
+    var contactNewCompiledTemplate = Template7.compile($$('#contact-new-template').html());
+
+    app.popup.contact_new_popup = app.popup.create({
+        content: contactNewCompiledTemplate({device: app.device}),
+        on: {
+            open: function (popup) {
+                function validate() {
+                    var formData = app.form.convertToData('#participant-new-form');
+                    if(formData.name && formData.phone) {
+                        $$('#participant-new-submit').removeClass('link-disabled');
+                    } else {
+                        $$('#participant-new-submit').addClass('link-disabled');
+                    }
+                }
+
+                function create () {
+                    if(!$$('#participant-new-submit').hasClass('link-disabled')) {
+                        var form_data = app.form.convertToData('#participant-new-form');
+                        service.contact.add({name: form_data.name, phones: [form_data.phone]}, function (result) {
+                            app.popup.contact_new_popup.close();
+                        }.bind(this));
+                    }
+                }
+
+                function change () {
+                    validate();
+                }
+
+                popup.$el.find('input').change(change);
+                popup.$el.find('#participant-new-submit').click(create);
+            },
+            closed: function (popup) {
+                popup.$el.find('input').val('');
+            }
+        }
+    });
 
     // TODO remove hot fix
     // var finishSync = service.init.finish.bind({}, 'sync');

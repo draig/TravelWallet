@@ -130,11 +130,7 @@
             update: function () {
                 if(!$$('#payment-edit-submit').hasClass('link-disabled')) {
                     service.payment.update(app.form.convertToData('#payment-edit-form'), function (result) {
-                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', payment.debt_id), {
-                            reloadCurrent: true,
-                            ignoreCache: true,
-                            history: false
-                        });
+                        app.views.current.router.back({force: true});
                     }.bind(this));
                 }
             },

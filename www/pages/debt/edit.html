@@ -34,9 +34,8 @@
                     </li>
 
                     <il>
-                        <a class="item-link smart-select smart-select-init" data-open-in="popup"
-                           data-searchbar="true"
-                           data-searchbar-placeholder="{{contacts.length}} contacts">
+                        <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
+                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
                             <select name="participant" @change="change" required multiple>
                                 <option disabled value="{{user.user_id}}">You</option>
                                 {{#each contacts}}
@@ -78,6 +77,8 @@
 
 <!--suppress JSAnnotator -->
 <script>
+    var compiledTemplate = Template7.compile('<option value="{{contact_id}}">{{name}}</option>');
+
     function validate() {
         var formData = app.form.convertToData('#debt-edit-form');
         if(formData.title && formData.currency.length && formData.participant.length) {
@@ -94,13 +95,10 @@
         methods: {
             create: function () {
                 if(!$$('#debt-edit-submit').hasClass('link-disabled')) {
-                    app.preloader.show();
+//                    app.preloader.show();
                     service.debt.update(app.form.convertToData('#debt-edit-form'), function (result) {
-                        app.preloader.hide();
-                        app.views.current.router.navigate('/debt/show/:debt_id/'.replace(':debt_id', result.debt_id), {
-                            reloadCurrent: true,
-                            ignoreCache: true
-                        });
+//                        app.preloader.hide();
+                        app.views.current.router.back({force: true});
                     });
                 }
             },
@@ -111,6 +109,25 @@
         on: {
             pageInit: function (e, page) {
                 app.form.fillFromData('#debt-edit-form', service.debt.get(this.$route.params.debt_id));
+
+                $$('.smart-select-participant').on('smartselect:open', function () {
+                    $$('.smart-select-page').prepend('<div class="fab fab-right-bottom color-blue"><a href="#"><i class="icon f7-icons">add</i></a></div>');
+
+                    $$('.smart-select-page .fab').click(function () {
+                        app.smartSelect.close('.smart-select-participant');
+                        app.popup.contact_new_popup.open();
+
+                        app.popup.contact_new_popup.once('close', function (e, popup) {
+                            app.data.contacts.forEach(function (contact) {
+                                if (!$$('.smart-select-participant option[value=":contact_id"]'.replace(':contact_id', contact.contact_id)).length) {
+                                    $$('.smart-select-participant select').append(compiledTemplate(contact));
+                                }
+                            });
+
+                            app.smartSelect.open('.smart-select-participant');
+                        });
+                    });
+                });
             }
         }
     };

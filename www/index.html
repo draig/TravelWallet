@@ -42,6 +42,60 @@
         </div>
     </div>
 
+    <script id="contact-new-template" type="text/template7">
+        <div class="popup ">
+            <div class="view">
+                <div class="page">
+                    <div class="navbar">
+                        <div class="navbar-inner">
+                            <div class="left">
+                                <a href="#" class="popup-close link">
+                                    <i class="icon icon-back"></i>
+                                    <span class="ios-only">Back</span>
+                                </a>
+                            </div>
+                            <div class="title">New Participant</div>
+                            <div class="right">
+                                <a id="participant-new-submit" href="#" class="link link-disabled">
+                                    {{#if device.android}}
+                                    <i class="f7-icons">check</i>
+                                    {{/if}}
+                                    <span class="ios-only">Done</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <form class="list no-hairlines-md" id="participant-new-form">
+                            <ul>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">Name</div>
+                                        <div class="item-input-wrap">
+                                            <input type="text" name="name" required validate placeholder="John Doe">
+                                            <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">Phone</div>
+                                        <div class="item-input-wrap">
+                                            <input type="number" required validate name="phone" placeholder="+375291234567">
+                                            <span class="input-clear-button"></span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
     <script type="text/javascript" src="cordova.js"></script>
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="lib/framework7v2/js/framework7.min.js"></script>

@@ -1,23 +1,18 @@
 <template>
     <div>
+        <div class="details-for-swiper swiper-container">
+            <div class="swiper-pagination"></div>
+            <div class="swiper-wrapper">
+                {{#each contacts}}
+                <div class="swiper-slide" data-user-id="{{contact_id}}">
+                    <img src="{{ava}}" width="80"/>
+                    <div class="swiper-slide-title">{{name}}</div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
         <div class="list">
             <ul>
-                <il>
-                    <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true"
-                       data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
-                        <select name="for" @change="recalculate" required>
-                            <option value="{{user.user_id}}">You</option>
-                            {{#each contacts}}
-                            <option value="{{contact_id}}">{{name}}</option>
-                            {{/each}}
-                        </select>
-                        <div class="item-content">
-                            <div class="item-inner">
-                                <div class="item-title">For</div>
-                            </div>
-                        </div>
-                    </a>
-                </il>
                 <li>
                     <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true">
                         <select name="currency" @change="recalculate" required>
@@ -38,7 +33,43 @@
 </template>
 
 <style>
+    .details-for-swiper .swiper-slide {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: none;
+        width: 160px;
+    }
 
+    .details-for-swiper {
+        padding: 20px 0;
+        font-size: 18px;
+    }
+
+    .details-for-swiper.swiper-container-horizontal > .swiper-pagination-bullets {
+        bottom: 0;
+    }
+
+    .details-for-swiper img {
+        border-radius: 50%;
+        border: 3px solid transparent;
+    }
+
+    .details-for-swiper .swiper-slide-active img {
+        border: 3px solid #2196f3;
+        -webkit-transition: border 0.7s;
+        transition: border 0.7s;
+    }
+
+    .details-for-swiper .swiper-slide-title {
+        width: 120px;
+        font-size: 14px;
+        white-space: nowrap;
+        max-width: 150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 </style>
 
 <!--suppress JSAnnotator -->
@@ -46,11 +77,12 @@
     var debt, compiledTemplate = Template7.compile($$('#details-template').html());
 
     function updateDetails() {
-        var contact_id = $$('[name="for"]').val();
+        var user_id = $$('.details-for-swiper .swiper-slide-active').data('user-id');
         var currency_id = $$('[name="currency"]').val();
+        console.log(user_id);
         $$('#details .generated').remove();
         $$('#details ul').append(compiledTemplate({
-            details: service.engine.details(contact_id, debt.debt_id, currency_id),
+            details: service.engine.details(user_id, debt.debt_id, currency_id),
             currency_id: currency_id
         }));
     }
@@ -71,7 +103,22 @@
         },
         on: {
             tabMounted: function () {
-                updateDetails();
+                app.swiper.create('.details-for-swiper', {
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    pagination: {
+                        el: '.swiper-pagination',
+                        type: 'bullets'
+                    },
+                    on: {
+                        init: function () {
+                            updateDetails();
+                        },
+                        slideChangeTransitionEnd: function () {
+                            updateDetails();
+                        }
+                    }
+                });
             }
         }
     };

@@ -223,6 +223,7 @@ function initAppData() {
             },
             closed: function (popup) {
                 popup.$el.find('input').val('');
+                popup.$el.find('li').removeClass('item-input-invalid item-input-with-error-message');
             }
         }
     });

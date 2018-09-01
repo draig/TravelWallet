@@ -17,19 +17,24 @@ service.engine = (function () {
         return service.contact.get(id).name;
     }
 
+    function isCached(debt_id, currency_id) {
+        var payments = service.payment.getByDebtId(debt_id);
+        return debtBookCache[debt_id] && debtBookCache[debt_id][currency_id] &&
+            (debtBookCache[debt_id][currency_id].hash === JSON.stringify(payments).hashCode());
+    }
+
     return {
 
         calculate: function (debt_id, currency_id) {
+            if(isCached(debt_id, currency_id)) {
+                return debtBookCache[debt_id][currency_id].book;
+            }
+
             var payments = service.payment.getByDebtId(debt_id),
                 paymentMap = {},
                 creditors = [],
                 debtors = [],
                 debtBook = [];
-
-            if(debtBookCache[debt_id] && debtBookCache[debt_id][currency_id] &&
-                (debtBookCache[debt_id][currency_id].hash === JSON.stringify(payments).hashCode())) {
-                return debtBookCache[debt_id][currency_id].book;
-            }
 
             payments.forEach(function (payment) {
                 addToDebtMap(paymentMap, payment.payer);
@@ -77,29 +82,19 @@ service.engine = (function () {
 
             (debtBookCache[debt_id]||(debtBookCache[debt_id] = {}))[currency_id] = {
                 hash: payments.join().hashCode(),
-                book: debtBook
+                book: debtBook,
+                map: paymentMap
             };
             return debtBook;
         },
         
         details: function (contact_id, debt_id, currency_id) {
-            var debt = service.debt.get(debt_id),
-                payments = service.payment.getByDebtId(debt_id),
-                paymentMap = {};
+            if(!isCached(debt_id, currency_id)) {
+                service.engine.calculate(debt_id, currency_id);
+            }
 
-            debt.participant.forEach(function (participant_id) {
-                addToDebtMap(paymentMap, participant_id);
-            });
-
-            payments.forEach(function (payment) {
-                addToDebtMap(paymentMap, payment.payer);
-                paymentMap[payment.payer].pay += service.currency.exchange(payment.currency, currency_id, payment.amount);
-
-                payment.participant.forEach(function (part) {
-                    addToDebtMap(paymentMap, part);
-                    paymentMap[part].owe += service.currency.exchange(payment.currency, currency_id, payment.amount) / payment.participant.length;
-                });
-            });
+            var paymentMap = debtBookCache[debt_id][currency_id].map;
+            addToDebtMap(paymentMap, contact_id);
 
             return {
                 spent: paymentMap[contact_id].owe,

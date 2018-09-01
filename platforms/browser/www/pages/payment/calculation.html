@@ -3,7 +3,7 @@
         <div class="list currency-selector">
             <ul>
                 <li>
-                    <a class="item-link smart-select smart-select-init" data-open-in="popup">
+                    <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true">
                         <select name="currency" @change="recalculate" required>
                             {{#each currencies}}
                             <option value="{{this.currency_id}}">{{this.title}}</option>

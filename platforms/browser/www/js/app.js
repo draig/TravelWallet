@@ -44,6 +44,11 @@ var app = new Framework7({
                     path: '/calculations/',
                     id: 'calculation',
                     componentUrl: './pages/payment/calculation.html'
+                },
+                {
+                    path: '/details/',
+                    id: 'details',
+                    componentUrl: './pages/payment/details.html'
                 }
             ]
         },
@@ -184,6 +189,43 @@ function initAppData() {
         app.data.debts = debts;
         service.init.finish('debt');
     }], 'debt');
+
+    var contactNewCompiledTemplate = Template7.compile($$('#contact-new-template').html());
+
+    app.popup.contact_new_popup = app.popup.create({
+        content: contactNewCompiledTemplate({device: app.device}),
+        on: {
+            open: function (popup) {
+                function validate() {
+                    var formData = app.form.convertToData('#participant-new-form');
+                    if(formData.name && formData.phone) {
+                        $$('#participant-new-submit').removeClass('link-disabled');
+                    } else {
+                        $$('#participant-new-submit').addClass('link-disabled');
+                    }
+                }
+
+                function create () {
+                    if(!$$('#participant-new-submit').hasClass('link-disabled')) {
+                        var form_data = app.form.convertToData('#participant-new-form');
+                        service.contact.add({name: form_data.name, phones: [form_data.phone]}, function (result) {
+                            app.popup.contact_new_popup.close();
+                        }.bind(this));
+                    }
+                }
+
+                function change () {
+                    validate();
+                }
+
+                popup.$el.find('input').change(change);
+                popup.$el.find('#participant-new-submit').click(create);
+            },
+            closed: function (popup) {
+                popup.$el.find('input').val('');
+            }
+        }
+    });
 
     // TODO remove hot fix
     // var finishSync = service.init.finish.bind({}, 'sync');

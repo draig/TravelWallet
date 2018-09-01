@@ -18,103 +18,162 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- App root element -->
-    <div id="app">
-        <!-- Statusbar overlay -->
-        <div class="statusbar"></div>
+<!-- App root element -->
+<div id="app">
+    <!-- Statusbar overlay -->
+    <div class="statusbar"></div>
 
-        <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main">
-            <!-- Initial Page, "data-name" contains page name -->
-            <div data-name="init" class="page">
-                <!-- Top Navbar -->
-                <div class="navbar">
-                    <div class="navbar-inner">
-                        <div class="title">Travel Wallet</div>
+    <!-- Your main view, should have "view-main" class -->
+    <div class="view view-main">
+        <!-- Initial Page, "data-name" contains page name -->
+        <div data-name="init" class="page">
+            <!-- Top Navbar -->
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="title">Travel Wallet</div>
+                </div>
+            </div>
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="preloader color-blue" style="width: 44px; height: 44px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="calculation-template" type="text/template7">
+    {{#if book.length}}
+    <ul class="generated">
+        {{#each book}}
+        <li>
+            <a href="#" class="item-link item-content">
+                <div class="item-inner">
+                    <div class="item-title-row">
+                        <div class="item-subtitle">
+                            <span>{{name debtor}}</span>
+                            <span class="owe-separator">owe to</span>
+                            <span>{{name creditor}}</span></div>
+                    </div>
+                    <div class="item-row calculation-total justify-content-flex-start">
+                        <span>{{format_amount amount}}</span>
+                        <span class="calculation-total-currency">{{currency ../currency_id}}</span>
                     </div>
                 </div>
+            </a>
+        </li>
+        {{/each}}
+    </ul>
+    {{/if}}
+</script>
 
-                <!-- Scrollable page content -->
+<script id="details-template" type="text/template7">
+    <il class="generated">
+        <div class="item-content">
+            <div class="item-inner">
+                <div class="item-title">Spent</div>
+                <div class="item-after">{{format_amount details.spent}}<span class="currency">{{currency ../currency_id}}</span>
+                </div>
+            </div>
+        </div>
+    </il>
+    <il class="generated">
+        <div class="item-content">
+            <div class="item-inner">
+                <div class="item-title">Pay</div>
+                <div class="item-after">{{format_amount details.pay}}<span
+                        class="currency">{{currency ../currency_id}}</span></div>
+            </div>
+        </div>
+    </il>
+    <il class="generated">
+        <div class="item-content">
+            <div class="item-inner">
+                {{#if details.debtor}}
+                <div class="item-title">Should payback</div>
+                {{else}}
+                <div class="item-title">Should receive</div>
+                {{/if}}
+                <div class="item-after">{{format_amount details.difference}}<span class="currency">{{currency ../currency_id}}</span>
+                </div>
+            </div>
+        </div>
+    </il>
+</script>
+
+<script id="contact-new-template" type="text/template7">
+    <div class="popup generated">
+        <div class="view">
+            <div class="page">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="left">
+                            <a href="#" class="popup-close link">
+                                <i class="icon icon-back"></i>
+                                <span class="ios-only">Back</span>
+                            </a>
+                        </div>
+                        <div class="title">New Participant</div>
+                        <div class="right">
+                            <a id="participant-new-submit" href="#" class="link link-disabled">
+                                {{#if device.android}}
+                                <i class="f7-icons">check</i>
+                                {{/if}}
+                                <span class="ios-only">Done</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div class="page-content">
-                    <div class="preloader color-blue" style="width: 44px; height: 44px;"></div>
+                    <form class="list no-hairlines-md" id="participant-new-form">
+                        <ul>
+                            <li class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Name</div>
+                                    <div class="item-input-wrap">
+                                        <input type="text" name="name" required validate placeholder="John Doe">
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="item-content item-input">
+                                <div class="item-inner">
+                                    <div class="item-title item-label">Phone</div>
+                                    <div class="item-input-wrap">
+                                        <input type="number" required validate name="phone" placeholder="+375291234567">
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</script>
 
-    <script id="contact-new-template" type="text/template7">
-        <div class="popup ">
-            <div class="view">
-                <div class="page">
-                    <div class="navbar">
-                        <div class="navbar-inner">
-                            <div class="left">
-                                <a href="#" class="popup-close link">
-                                    <i class="icon icon-back"></i>
-                                    <span class="ios-only">Back</span>
-                                </a>
-                            </div>
-                            <div class="title">New Participant</div>
-                            <div class="right">
-                                <a id="participant-new-submit" href="#" class="link link-disabled">
-                                    {{#if device.android}}
-                                    <i class="f7-icons">check</i>
-                                    {{/if}}
-                                    <span class="ios-only">Done</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="page-content">
-                        <form class="list no-hairlines-md" id="participant-new-form">
-                            <ul>
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Name</div>
-                                        <div class="item-input-wrap">
-                                            <input type="text" name="name" required validate placeholder="John Doe">
-                                            <span class="input-clear-button"></span>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="item-content item-input">
-                                    <div class="item-inner">
-                                        <div class="item-title item-label">Phone</div>
-                                        <div class="item-input-wrap">
-                                            <input type="number" required validate name="phone" placeholder="+375291234567">
-                                            <span class="input-clear-button"></span>
-                                        </div>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </script>
-
-    <script type="text/javascript" src="cordova.js"></script>
-    <!-- Path to Framework7 Library JS-->
-    <script type="text/javascript" src="lib/framework7v2/js/framework7.min.js"></script>
-    <script type="text/javascript" src="lib/croppie/croppie.js"></script>
-    <script type="text/javascript" src="js/helpers.js"></script>
-    <!-- Path to services-->
-    <script type="text/javascript" src="js/utils.js"></script>
-    <script type="text/javascript" src="js/service.js"></script>
-    <script type="text/javascript" src="js/service/auth.js"></script>
-    <script type="text/javascript" src="js/service/debt.js"></script>
-    <script type="text/javascript" src="js/service/payment.js"></script>
-    <script type="text/javascript" src="js/service/contacts.js"></script>
-    <script type="text/javascript" src="js/service/currency.js"></script>
-    <script type="text/javascript" src="js/service/user.js"></script>
-    <script type="text/javascript" src="js/service/engine.js"></script>
-    <script type="text/javascript" src="js/service/sync.js"></script>
-    <script type="text/javascript" src="js/service/initialization.js"></script>
-    <!-- Path to your app js-->
-    <script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<!-- Path to Framework7 Library JS-->
+<script type="text/javascript" src="lib/framework7v2/js/framework7.min.js"></script>
+<script type="text/javascript" src="lib/croppie/croppie.js"></script>
+<script type="text/javascript" src="js/helpers.js"></script>
+<!-- Path to services-->
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/service.js"></script>
+<script type="text/javascript" src="js/service/auth.js"></script>
+<script type="text/javascript" src="js/service/debt.js"></script>
+<script type="text/javascript" src="js/service/payment.js"></script>
+<script type="text/javascript" src="js/service/contacts.js"></script>
+<script type="text/javascript" src="js/service/currency.js"></script>
+<script type="text/javascript" src="js/service/user.js"></script>
+<script type="text/javascript" src="js/service/engine.js"></script>
+<script type="text/javascript" src="js/service/sync.js"></script>
+<script type="text/javascript" src="js/service/initialization.js"></script>
+<!-- Path to your app js-->
+<script type="text/javascript" src="js/app.js"></script>
 
 </body>
 </html>

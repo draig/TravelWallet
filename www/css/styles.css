@@ -78,3 +78,8 @@ a.link.link-disabled {
     margin-top: 16px;
     font-size: 16px;
 }
+
+.currency {
+    padding-left: 3px;
+    color: #808080;
+}

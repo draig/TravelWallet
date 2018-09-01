@@ -46,29 +46,7 @@
 
 <!--suppress JSAnnotator -->
 <script>
-    var debt, compiledTemplate = Template7.compile(
-            '{{#if book.length}}\n' +
-            '<ul>\n' +
-            '    {{#each book}}\n' +
-            '    <li>\n' +
-            '        <a href="#" class="item-link item-content">\n' +
-            '            <div class="item-inner">\n' +
-            '                <div class="item-title-row">\n' +
-            '                    <div class="item-subtitle">\n' +
-            '                        <span>{{name debtor}}</span>\n' +
-            '                        <span class="owe-separator">owe to</span>\n' +
-            '                        <span>{{name creditor}}</span></div>\n' +
-            '                </div>\n' +
-            '                <div class="item-row calculation-total justify-content-flex-start">\n' +
-            '                    <span>{{format_amount amount}}</span>\n' +
-            '                    <span class="calculation-total-currency">{{currency ../currency_id}}</span>\n' +
-            '                </div>\n' +
-            '            </div>\n' +
-            '        </a>\n' +
-            '    </li>\n' +
-            '    {{/each}}\n' +
-            '</ul>\n' +
-            '{{/if}}');
+    var debt, compiledTemplate = Template7.compile($$('#calculation-template').html());
 
     function updateDebtList() {
         var currency = service.currency.get($$('[name="currency"]').val());

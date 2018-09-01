@@ -44,6 +44,11 @@ var app = new Framework7({
                     path: '/calculations/',
                     id: 'calculation',
                     componentUrl: './pages/payment/calculation.html'
+                },
+                {
+                    path: '/details/',
+                    id: 'details',
+                    componentUrl: './pages/payment/details.html'
                 }
             ]
         },

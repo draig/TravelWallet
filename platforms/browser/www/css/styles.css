@@ -65,3 +65,21 @@ a.link.link-disabled {
 .cr-boundary {
     background: black;
 }
+
+.smart-select-page.page-with-select-all .list {
+    margin-top: 16px;
+}
+
+.smart-select-page.page-with-select-all .select-all {
+    text-align: center;
+}
+
+.smart-select-page.page-with-select-all .select-all a {
+    margin-top: 16px;
+    font-size: 16px;
+}
+
+.currency {
+    padding-left: 3px;
+    color: #808080;
+}

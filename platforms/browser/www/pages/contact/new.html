@@ -1,0 +1,88 @@
+<template>
+    <div data-name="participant-new" class="page">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span class="ios-only">Back</span>
+                    </a>
+                </div>
+                <div class="title">New Participant</div>
+                <div class="right">
+                    <a @click="create" id="participant-new-submit" href="#" class="link link-disabled">
+                        {{#if device.android}}
+                        <i class="f7-icons">check</i>
+                        {{/if}}
+                        <span class="ios-only">Done</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form class="list no-hairlines-md" id="participant-new-form">
+                <input type="hidden" name="debt_id" value="{{$route.params.debt_id}}">
+                <ul>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Name</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="text" name="name" required validate placeholder="John Doe">
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">Phone</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="tel" required validate name="phone" placeholder="+375291234567">
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </form>
+        </div>
+    </div>
+</template>
+
+<style></style>
+
+<!--suppress JSAnnotator -->
+<script>
+    function validate() {
+        var formData = app.form.convertToData('#participant-new-form');
+        if(formData.name && formData.phone) {
+            $$('#participant-new-submit').removeClass('link-disabled');
+        } else {
+            $$('#participant-new-submit').addClass('link-disabled');
+        }
+    }
+
+    return {
+        data: function () {
+            return {
+                device: app.device
+            };
+        },
+        methods: {
+            create: function () {
+                if(!$$('#participant-new-submit').hasClass('link-disabled')) {
+                    var form_data = app.form.convertToData('#participant-new-form');
+                    service.contact.add({name: form_data.name, phones: [form_data.phone]}, function (result) {
+                        app.views.current.router.back();
+                    }.bind(this));
+                }
+            },
+            change: function () {
+                validate();
+            }
+        },
+        on: {
+            pageInit: function () {}
+        }
+    };
+</script>

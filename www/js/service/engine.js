@@ -1,6 +1,7 @@
 service.engine = (function () {
 
     var debtBookCache = {};
+    var detailsCache = {};
 
     function addToDebtMap(debtMap, user_id) {
         if (!debtMap[user_id]) {
@@ -79,6 +80,33 @@ service.engine = (function () {
                 book: debtBook
             };
             return debtBook;
+        },
+        
+        details: function (contact_id, debt_id, currency_id) {
+            var debt = service.debt.get(debt_id),
+                payments = service.payment.getByDebtId(debt_id),
+                paymentMap = {};
+
+            debt.participant.forEach(function (participant_id) {
+                addToDebtMap(paymentMap, participant_id);
+            });
+
+            payments.forEach(function (payment) {
+                addToDebtMap(paymentMap, payment.payer);
+                paymentMap[payment.payer].pay += service.currency.exchange(payment.currency, currency_id, payment.amount);
+
+                payment.participant.forEach(function (part) {
+                    addToDebtMap(paymentMap, part);
+                    paymentMap[part].owe += service.currency.exchange(payment.currency, currency_id, payment.amount) / payment.participant.length;
+                });
+            });
+
+            return {
+                spent: paymentMap[contact_id].owe,
+                pay: paymentMap[contact_id].pay,
+                debtor: paymentMap[contact_id].owe > paymentMap[contact_id].pay,
+                difference: Math.abs(paymentMap[contact_id].owe - paymentMap[contact_id].pay)
+            };
         }
     }
 })();

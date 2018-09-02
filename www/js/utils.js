@@ -68,6 +68,10 @@ Array.prototype.remove = function (callback) {
     return result;
 };
 
+Array.prototype.random = function () {
+    return this[Math.floor(Math.random() * this.length)];;
+};
+
 String.prototype.hashCode = function () {
     var hash = 0, i, chr;
     if (this.length === 0) return hash;

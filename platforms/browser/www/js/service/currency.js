@@ -57,6 +57,31 @@ service.currency = (function () {
             } else {
                 return app.data.currency_rates['usd'][to_currency_id] / app.data.currency_rates['usd'][from_currency_id] * amount;
             }
+        },
+        sync: function (success, error) {
+            app.request.get('https://www.xe.com/currencytables/?from=USD', function (data) {
+                var $$fake_html = $$('<div></div>').html(data);
+                db.transaction(function (tx) {
+                    tx.executeSql("DELETE FROM currency_rates");
+                    $$fake_html.find('#historicalRateTbl tbody tr').each(function () {
+                        var tds = $$(this).find('td'),
+                            currency = $$(tds[0]).text().toLowerCase(),
+                            per_usd = +$$(tds[2]).text(),
+                            per_currency = +$$(tds[3]).text();
+
+                        if(currency !== 'usd' && !!service.currency.get(currency)) {
+                            tx.executeSql("INSERT OR IGNORE INTO currency_rates (from_currency_id, to_currency_id, rate) VALUES (?, ?, ?)",
+                                ['usd', currency, per_usd]);
+                            tx.executeSql("INSERT OR IGNORE INTO currency_rates (from_currency_id, to_currency_id, rate) VALUES (?, ?, ?)",
+                                [currency, 'usd', per_currency]);
+                        }
+                    });
+                });
+                service.currency.rateList(function (rate_list) {
+                    app.data.currency_rates = rate_list;
+                    success && success(rate_list);
+                });
+            });
         }
     }
 })();

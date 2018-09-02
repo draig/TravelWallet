@@ -12,7 +12,12 @@
             </div>
         </div>
 
-        <div class="page-content">
+        <div class="page-content ptr-content">
+            <div class="ptr-preloader">
+                <div class="preloader"></div>
+                <div class="ptr-arrow"></div>
+            </div>
+
             <div class="data-table">
                 <table>
                     <thead>
@@ -62,6 +67,17 @@
 
             return {
                 currencies: currencies
+            }
+        },
+        on: {
+            pageInit: function (e, page) {
+                var $preloader = page.$el.find('.ptr-content');
+                $preloader.on('ptr:refresh', function() {
+                    service.currency.sync(function () {
+                        app.ptr.done();
+                        app.views.current.router.refreshPage();
+                    });
+                })
             }
         }
     };

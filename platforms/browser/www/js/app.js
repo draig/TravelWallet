@@ -6,7 +6,7 @@ var $$ = Dom7,
 var app = new Framework7({
     root: '#app',
     name: 'TravelWallet',
-    id: 'com.startappsoft.travelwallet',
+    id: 'com.adashkevich.travelwallet',
     version: '1.0.0',
     panel: {
         swipe: 'left'
@@ -61,8 +61,8 @@ var app = new Framework7({
             componentUrl: './pages/payment/edit.html'
         },
         {
-            path: '/user/edit/',
-            componentUrl: './pages/user/edit.html'
+            path: '/profile/edit/',
+            componentUrl: './pages/profile/edit.html'
         },
         {
             path: '/currency/list/',
@@ -71,7 +71,7 @@ var app = new Framework7({
     ],
     data: function () {
         return {
-            contacts: [],
+            users: [],
             debts: [],
             payments: [],
             archived_debts: [],
@@ -84,8 +84,8 @@ var app = new Framework7({
 var mainView = app.views.create('.view-main');
 
 db.transaction(function (tx) {
-    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id, name, device_id, phone, log_in, ava, auth_token, sync)');
-    tx.executeSql('CREATE TABLE IF NOT EXISTS contacts (contact_id UNIQUE, name, phone, phones, ava, install_app, sync)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS auth (user_id, auth_token)');
+    tx.executeSql('CREATE TABLE IF NOT EXISTS users (user_id UNIQUE, name, phone, ava, in_app, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS debts (debt_id, title, currency, participant, owe, status, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS payments (payment_id, debt_id, title, amount NUM, currency, payer, participant, deleted, sync)');
     tx.executeSql('CREATE TABLE IF NOT EXISTS currencies (currency_id UNIQUE, title, sign)');
@@ -115,53 +115,38 @@ db.transaction(function (tx) {
     tx.executeSql("INSERT OR IGNORE INTO currency_rates (from_currency_id, to_currency_id, rate) VALUES ('byn', 'usd', 0.4872515776)");
 });
 
-db.transaction(function (tx) {
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-1', 'Andrei Dashkevich', '+375447604989', '+375447604989', 'img/andrei.png', false, false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-2', 'Nikita Vasilevsky', '+375447171127', '+375447171127', 'img/nikita.png', false, false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-3', 'Anya Osetskaya ', '+375295055856', '+375295055856', 'img/anya.png', false, false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-4', 'Maria Schipanova ', '+375290000000', '+375290000000', 'img/maria.png', false, false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-5', 'Stas Saprankov', '+375290000001', '+375290000001', 'img/stas.png', false, false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-6', 'Alexander Tsetsersky', '+375290000002', '+375290000002', 'img/alexander.png', false, false]);
-    tx.executeSql('INSERT OR IGNORE INTO contacts (contact_id, name, phone, phones, ava, install_app, sync) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        ['local-7', 'Olga Shasholina', '+375290000003', '+375290000003', 'img/olga.png', false, false]);
-});
-
 function initAppData() {
 
-    service.init.add(service.user.getLogIn, function (user) {
-        app.data.user = user;
-        service.init.finish('user');
-    }, 'user');
+    service.init.add(service.user.list, function (users) {
+        app.data.users = users;
+        service.init.finish('users');
+    }, 'users');
+
+    service.init.add(service.auth.getLogIn, function (details) {
+        if(details) {
+            app.data.current_user = service.user.get(details.user_id);
+        }
+        service.init.finish('current_user');
+    }, 'current_user', ['users']);
 
     service.init.add(function () {
-        if (!app.data.user) {
+        if (!app.data.current_user) {
             // TODO remove hot fix
             // app.views.current.router.navigate('/login-screen/', {
             //     animate: false
             // });
 
-            service.user.create({
-                id: '1',
-                phone: '+375291234567',
-                auth_token: 'hdoptz',
-                ava: 'img/ava.png'
-            }, function (tx, results) {
+            service.auth.logIn({id: '1', phone: '+375291234567', auth_token: 'hdoptz', ava: 'img/ava.png'}, function () {
                 service.init.finish('login');
             });
         } else {
             service.init.finish('login');
         }
-    }, [], 'login', ['user']);
+    }, [], 'login', ['current_user']);
 
     service.init.add(function () {
-        if (!app.data.user.name) {
-            app.views.current.router.navigate('/user/edit/', {
+        if (!app.data.current_user.name) {
+            app.views.current.router.navigate('/profile/edit/', {
                 animate: false
             });
         } else {
@@ -179,11 +164,6 @@ function initAppData() {
         service.init.finish('currency_rates');
     }, 'currency_rates');
 
-    service.init.add(service.contact.list, function (contacts) {
-        app.data.contacts = contacts;
-        service.init.finish('contact');
-    }, 'contact');
-
     service.init.add(service.payment.list, function (payments) {
         app.data.payments = payments;
         service.init.finish('payments');
@@ -196,11 +176,11 @@ function initAppData() {
 
     // TODO remove hot fix
     // var finishSync = service.init.finish.bind({}, 'sync');
-    // service.init.add(service.sync.start, [finishSync, finishSync], 'sync', ['contact', 'payments', 'debt', 'login', 'sync_contacts']);
+    // service.init.add(service.sync.start, [finishSync, finishSync], 'sync', ['users', 'payments', 'debt', 'login', 'sync_contacts']);
 
     // TODO remove hot fix
     // var finishSyncContacts = service.init.finish.bind({}, 'sync_contacts');
-    // service.init.add(service.contact.sync_w_device, [finishSyncContacts, finishSyncContacts], 'sync_contacts', ['contact']);
+    // service.init.add(service.user.sync_w_device, [finishSyncContacts, finishSyncContacts], 'sync_contacts', ['users']);
 
     service.init.start(function () {
         app.views.current.router.navigate('/debt/list/', {

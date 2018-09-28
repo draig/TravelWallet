@@ -3,14 +3,11 @@ service.sync = (function () {
     function getData() {
         var data = {};
 
-        data.user = service.user.forSync();
-        if(!data.user) delete data.user;
-
         data.debts = service.debt.forSync();
         if(!data.debts.length) delete data.debts;
 
-        data.contacts = service.contact.forSync();
-        if(!data.contacts.length) delete data.contacts;
+        data.users = service.user.forSync();
+        if(!data.users.length) delete data.users;
 
         data.payments = service.payment.forSync();
         if(!data.payments.length) delete data.payments;
@@ -18,8 +15,7 @@ service.sync = (function () {
     }
 
     function syncback(data) {
-        service.user.syncback();
-        data.contacts && service.contact.syncback(data.contacts);
+        data.users && service.user.syncback(data.users);
         data.debts && service.debt.syncback(data.debts);
         data.payments && service.payments.syncback(data.payments);
     }

@@ -3,8 +3,8 @@
         <div class="details-for-swiper swiper-container">
             <div class="swiper-pagination"></div>
             <div class="swiper-wrapper">
-                {{#each contacts}}
-                <div class="swiper-slide" data-user-id="{{contact_id}}">
+                {{#each users}}
+                <div class="swiper-slide" data-user-id="{{user_id}}">
                     <img src="{{ava}}" width="80"/>
                     <div class="swiper-slide-title">{{name}}</div>
                 </div>
@@ -69,6 +69,7 @@
         max-width: 150px;
         text-overflow: ellipsis;
         overflow: hidden;
+        text-align: center
     }
 </style>
 
@@ -92,8 +93,8 @@
             debt = service.debt.get(this.$route.params.debt_id);
             return {
                 currencies: service.currency.getByIds(debt.currency),
-                contacts: service.contact.getByIds(debt.participant),
-                user: app.data.user
+                users: service.user.getByIds(debt.participant),
+                user: app.data.current_user
             }
         },
         methods: {

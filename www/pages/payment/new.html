@@ -60,11 +60,10 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true"
-                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
+                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} users">
                             <select name="payer" @change="change" required>
-                                <option value="{{user.user_id}}">You</option>
-                                {{#each contacts}}
-                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{#each users}}
+                                    <option value="{{user_id}}">{{name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -77,11 +76,10 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
-                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
+                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} users">
                             <select name="participant" @change="change" required multiple>
-                                <option value="{{user.user_id}}">You</option>
-                                {{#each contacts}}
-                                    <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{#each users}}
+                                    <option value="{{user_id}}">{{name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -117,8 +115,8 @@
             var debt = service.debt.get(this.$route.params.debt_id);
             return {
                 currencies: service.currency.getByIds(debt.currency),
-                contacts: service.contact.getByIds(debt.participant),
-                user: app.data.user,
+                users: service.user.getByIds(debt.participant),
+                current_user: app.data.current_user,
                 device: app.device
             };
         },

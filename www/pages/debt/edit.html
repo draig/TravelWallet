@@ -35,11 +35,10 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
-                           data-searchbar="true" data-searchbar-placeholder="{{contacts.length}} contacts">
+                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} users">
                             <select name="participant" @change="change" required multiple>
-                                <option disabled value="{{user.user_id}}">You</option>
-                                {{#each contacts}}
-                                <option value="{{this.contact_id}}">{{this.name}}</option>
+                                {{#each users}}
+                                <option value="{{user_id}}">{{name}}</option>
                                 {{/each}}
                             </select>
                             <div class="item-content">
@@ -77,7 +76,7 @@
 
 <!--suppress JSAnnotator -->
 <script>
-    var compiledTemplate = Template7.compile('<option value="{{contact_id}}">{{name}}</option>');
+    var compiledTemplate = Template7.compile('<option value="{{user_id}}">{{name}}</option>');
 
     function validate() {
         var formData = app.form.convertToData('#debt-edit-form');
@@ -118,9 +117,9 @@
                         app.popup.contact_new_popup.open();
 
                         app.popup.contact_new_popup.once('close', function (e, popup) {
-                            app.data.contacts.forEach(function (contact) {
-                                if (!$$('.smart-select-participant option[value=":contact_id"]'.replace(':contact_id', contact.contact_id)).length) {
-                                    $$('.smart-select-participant select').append(compiledTemplate(contact));
+                            app.data.users.forEach(function (user) {
+                                if (!$$('.smart-select-participant option[value=":user_id"]'.replace(':user_id', user.user_id)).length) {
+                                    $$('.smart-select-participant select').append(compiledTemplate(user));
                                 }
                             });
 

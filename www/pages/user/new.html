@@ -71,7 +71,7 @@
             create: function () {
                 if(!$$('#participant-new-submit').hasClass('link-disabled')) {
                     var form_data = app.form.convertToData('#participant-new-form');
-                    service.contact.add({name: form_data.name, phones: [form_data.phone]}, function (result) {
+                    service.user.create({name: form_data.name, phones: [form_data.phone]}, function (result) {
                         app.views.current.router.back();
                     }.bind(this));
                 }

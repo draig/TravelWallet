@@ -14,7 +14,7 @@ service.engine = (function () {
     }
 
     function name (id) {
-        return service.contact.get(id).name;
+        return service.user.get(id).name;
     }
 
     function isCached(debt_id, currency_id) {
@@ -88,19 +88,19 @@ service.engine = (function () {
             return debtBook;
         },
         
-        details: function (contact_id, debt_id, currency_id) {
+        details: function (user_id, debt_id, currency_id) {
             if(!isCached(debt_id, currency_id)) {
                 service.engine.calculate(debt_id, currency_id);
             }
 
             var paymentMap = debtBookCache[debt_id][currency_id].map;
-            addToDebtMap(paymentMap, contact_id);
+            addToDebtMap(paymentMap, user_id);
 
             return {
-                spent: paymentMap[contact_id].owe,
-                pay: paymentMap[contact_id].pay,
-                debtor: paymentMap[contact_id].owe > paymentMap[contact_id].pay,
-                difference: Math.abs(paymentMap[contact_id].owe - paymentMap[contact_id].pay)
+                spent: paymentMap[user_id].owe,
+                pay: paymentMap[user_id].pay,
+                debtor: paymentMap[user_id].owe > paymentMap[user_id].pay,
+                difference: Math.abs(paymentMap[user_id].owe - paymentMap[user_id].pay)
             };
         }
     }

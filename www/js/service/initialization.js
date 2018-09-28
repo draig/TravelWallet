@@ -50,6 +50,7 @@ service.init = (function () {
         },
 
         finish: function (name) {
+            console.log('finish: ' + name);
             --taskCount;
 
             if (name) {

@@ -29,7 +29,7 @@ function initPopups() {
             if (!$$('#participant-new-submit').hasClass('link-disabled')) {
                 function _create(ava) {
                     var form_data = app.form.convertToData('#participant-new-form');
-                    service.contact.add({name: form_data.name, phones: [form_data.phone], ava: ava}, function (result) {
+                    service.user.create({name: form_data.name, phone: form_data.phone, ava: ava}, function (result) {
                         app.popup.contact_new_popup.close();
                     }.bind(this));
                 }

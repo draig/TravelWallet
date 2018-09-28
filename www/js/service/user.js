@@ -1,46 +1,51 @@
 service.user = (function () {
 
     return {
-
-        getLogIn: function (success, error) {
+        list: function (success, error) {
             db.transaction(function (tx) {
-                tx.executeSql('SELECT * FROM users WHERE log_in=?', [true], function (tx, results) {
-                    if(!results.rows.length) {
-                        success && success();
-                    } else if (results.rows.length === 1) {
-                        success && success(results.rows[0]);
-                    } else {
-                        tx.executeSql('UPDATE users SET log_in=?', [false], function (tx, results) {
-                            success && success();
-                        });
-                    }
+                tx.executeSql('SELECT * FROM users', [], function (tx, results) {
+                    var users = utils.sqlResultSetToArray(results);
+                    users.forEach(function (user) {
+                        user.in_app =  user.in_app === 'true';
+                        user.sync =  user.sync === 'true';
+                    });
+                    success && success(users);
                 }, function (tx, e) {
                     error && error(e);
                 });
             });
         },
 
+        getByIds: function (ids) {
+            return app.data.users.filter(function (user) {
+                return ids.indexOf(user.user_id) !== -1;
+            });
+        },
+
+        get: function (user_id) {
+            return app.data.users.find(function (user) {
+                return user.user_id === user_id;
+            });
+        },
+
         create: function (data, success, error) {
-            var userData = [
-                data.id,
-                utils.uuid(),
+            var contactData = [
+                data.user_id || 'local-' + utils.uuid(),
+                data.name || null,
                 data.phone,
-                true,
-                data.ava || '',
-                data.auth_token,
-                'true'
+                data.ava || null,
+                data.in_app || false,
+                data.sync || false
             ];
             db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO users (user_id, device_id, phone, log_in, ava, auth_token, sync) VALUES (?, ?, ?, ?, ?, ?, ?)', userData, function (tx, results) {
-                    var result = app.data.user = {
-                        user_id: data.id,
-                        device_id: userData[1],
-                        phone: data.phone,
-                        log_in: userData[3],
-                        ava: userData[4],
-                        auth_token: data.auth_token,
-                        sync: userData[6]
-                    };
+                tx.executeSql('INSERT INTO users (user_id, name, phone, ava, in_app, sync) VALUES (?, ?, ?, ?, ?, ?)', contactData, function (tx, results) {
+                    var result = app.utils.extend({}, data, {
+                        user_id: contactData[0],
+                        ava: contactData[3],
+                        in_app: contactData[4],
+                        sync: contactData[5]
+                    });
+                    app.data.users.push(result);
                     success && success(result);
                 }, function (tx, e) {
                     error && error(e);
@@ -49,19 +54,22 @@ service.user = (function () {
         },
 
         update: function (data, success, error) {
-            var userData = [
-                data.name || app.data.user.name,
-                data.ava || app.data.user.ava,
-                data.sync || app.data.user.sync,
-                data.user_id || app.data.user.user_id
+            var contactData = [
+                data.user_id,
+                data.name,
+                data.phone,
+                data.ava,
+                data.in_app,
+                data.sync || false,
+                data.local_id || data.user_id
             ];
             db.transaction(function (tx) {
-                tx.executeSql('UPDATE users SET name=?, ava=?, sync=? WHERE user_id=? AND log_in=\'true\'', userData, function (tx, results) {
-                    var result = app.utils.extend(app.data.user, {
-                        name: userData[0],
-                        ava: userData[1],
-                        sync: userData[2]
+                tx.executeSql('UPDATE users SET user_id=?, name=?, phone=?, ava=?, in_app=?, sync=? WHERE user_id=?', contactData, function (tx, results) {
+                    var result = app.utils.extend(service.user.get(data.user_id), data, {
+                        sync: contactData[6],
+                        local_id: null
                     });
+
                     success && success(result);
                 }, function (tx, e) {
                     error && error(e);
@@ -69,38 +77,53 @@ service.user = (function () {
             });
         },
 
-        avatar: function (avatarBlob, success, error) {
-            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-                utils.saveBlob(avatarBlob, "new_avatar.png", fs, function (fileEntry) {
-                    service.user.update({ava: fileEntry.toURL()});
-                    success && success();
-                });
-            }, function (e) { error && error(e); });
-        },
-
-        contact: function () {
-            var u = app.data.user;
-            return {
-                contact_id: u.user_id,
-                name: u.name,
-                phone: u.phone,
-                ava: u.ava,
-                install_app: true,
-                sync: true
-            }
-        },
-
         forSync: function () {
-            if(app.data.user.sync === 'false') {
-                app.data.user.sync = 'pending';
-                return app.data.user;
-            }
+            return app.data.users.filter(function (user) {
+                if (user.sync === 'false') {
+                    user.sync = 'pending';
+                    return true;
+                }
+            });
         },
 
-        syncback: function () {
-            if(app.data.user.sync === 'pending') {
-                service.user.update({sync: 'true'});
-            }
+        syncback: function (synced_contacts) {
+            synced_contacts.forEach(function (synced_contact) {
+                var local_contact = service.user.get(synced_contact.local_id);
+                service.user.update(app.utils.extend({}, local_contact, {
+                    in_app: true,
+                    sync: 'true'
+                }), function (result) {
+                    local_contact = result;
+                });
+            });
+            app.data.users.forEach(function (user) {
+                if (user.sync === 'pending') {
+                    service.user.update(app.utils.extend({}, user, {sync: 'true'}), function (result) {
+                        user = result;
+                    });
+                }
+            });
+        },
+
+        merge_contacts: function (device_contacts) {
+            device_contacts.forEach(function (device_contact) {
+                var contact_w_same_id = app.data.users.find(function (user) {
+                    return user.user_id === device_contact.user_id;
+                });
+                if (contact_w_same_id) {
+                    var intersection = utils.intersection(contact_w_same_id.phones, device_contact.phones);
+                    if (intersection.length) {
+                        return;
+                    }
+                }
+                var duplicate = app.data.users.find(function (user) {
+                    return !!utils.intersection(device_contact.phones, user.phones).length;
+                });
+
+                if (!duplicate) {
+                    service.user.create(device_contact);
+                }
+            });
         }
     }
 })();

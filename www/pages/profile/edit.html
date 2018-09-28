@@ -2,7 +2,7 @@
     <div data-name="user-edit" class="page">
         <div class="navbar">
             <div class="navbar-inner">
-                {{#if user.name}}
+                {{#if current_user.name}}
                 <div class="left">
                     <a href="#" class="back link">
                         <i class="icon icon-back"></i>
@@ -20,11 +20,12 @@
         </div>
         <div class="page-content">
             <div class="avatar-wrapper">
-                <img id="avatar" src="{{user.ava}}"/>
+                <img id="avatar" src="{{current_user.ava}}"/>
             </div>
 
             <form class="list no-hairlines-md" id="user-edit-form">
-                <input type="hidden" name="user_id" value="{{user.user_id}}">
+                <input type="hidden" name="user_id" value="{{current_user.user_id}}">
+                <input type="hidden" name="phone" value="{{current_user.phone}}">
                 <ul>
                     <li class="item-content item-input">
                         <div class="item-inner">
@@ -38,7 +39,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">Name</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="text" name="name" value="{{user.name}}" required validate placeholder="John Doe">
+                                <input @change="change" type="text" name="name" value="{{current_user.name}}" required validate placeholder="John Doe">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -63,7 +64,7 @@
 <!--suppress JSAnnotator -->
 <script>
     var croppie;
-    var avaChanged = false;
+    var ava_changed = false;
 
     function validate() {
         var formData = app.form.convertToData('#user-edit-form');
@@ -75,11 +76,7 @@
     }
 
     function saveAvatar() {
-        if(avaChanged || croppie.get().zoom !== 1) {
-            croppie.result('blob').then(function (avaBlob) {
-                service.user.avatar(avaBlob);
-            });
-        }
+
     }
 
     return {
@@ -91,14 +88,26 @@
             create: function () {
                 if (!$$('#user-edit-submit').hasClass('link-disabled')) {
                     app.preloader.show();
-                    saveAvatar();
-                    service.user.update(app.form.convertToData('#user-edit-form'), function (result) {
-                        console.log('profile finished');
-                        service.init.finish('profile');
-                        app.preloader.hide();
-                    }, function (e) {
-                        console.log(e);
-                    });
+
+                    function _create(ava) {
+                        var form_data = app.form.convertToData('#user-edit-form');
+                        service.user.update(app.utils.extend(form_data, {ava: ava}), function (result) {
+                            app.data.current_user = result;
+                            console.log(result);
+                            app.preloader.hide();
+                            service.init.finish('profile');
+                        }.bind(this));
+                    }
+
+                    if (ava_changed || croppie.get().zoom !== 1) {
+                        croppie.result('blob').then(function (avaBlob) {
+                            service.image.save(avaBlob, function (ava_url) {
+                                _create(ava_url);
+                            });
+                        });
+                    } else {
+                        _create(app.data.current_user.ava);
+                    }
                 }
             },
 
@@ -116,7 +125,7 @@
                         croppie.bind({
                             url: event.target.result
                         });
-                        avaChanged = true;
+                        ava_changed = true;
                     };
 
                     reader.readAsDataURL(input.files[0]);

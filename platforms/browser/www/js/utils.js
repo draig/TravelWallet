@@ -52,6 +52,17 @@ var utils = (function () {
                 return second_arr.indexOf(n) !== -1;
             });
             return intersection;
+        },
+
+        locale: function () {
+            if(navigator && navigator.language) {
+                return navigator.language.substring(0, 2);
+            }
+            return 'en';
+        },
+
+        localeStr: function () {
+            return locale_strings[utils.locale()] || locale_strings['en'];
         }
     }
 })();

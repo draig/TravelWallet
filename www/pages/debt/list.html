@@ -2,7 +2,7 @@
     <div data-name="debt-list" class="page">
         <div class="navbar debt-list-navbar">
             <div class="navbar-inner">
-                <div class="title">Travel Wallet</div>
+                <div class="title">{{locale_str.list_debt_page_title}}</div>
                 <div class="right">
                     <a href="/currency/list/" class="link">
                         <i class="f7-icons">money_dollar</i>
@@ -35,7 +35,7 @@
                                 </a>
                             </div>
                             <div class="swipeout-actions-right">
-                                <a href="#" data-confirm="Are you sure you want to delete this item ?" class="swipeout-delete swipeout-overswipe">Delete</a>
+                                <a href="#" data-confirm="{{../locale_str.delete_debt_popup_msg}}" class="swipeout-delete swipeout-overswipe">Delete</a>
                             </div>
                         </li>
                     {{/each}}

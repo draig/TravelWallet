@@ -1,12 +1,11 @@
 var $$ = Dom7,
-    endpoint = 'http://192.168.1.40:3001',
+    endpoint = 'localhost',
     db = window.openDatabase("travel_wallet", "1.0", "Travel Wallet DB", 1000000);
-
 
 var app = new Framework7({
     root: '#app',
     name: 'TravelWallet',
-    id: 'com.adashkevich.travelwallet',
+    id: 'com.adashkevich.phonegap.travelwallet',
     version: '1.0.0',
     panel: {
         swipe: 'left'
@@ -76,12 +75,14 @@ var app = new Framework7({
             payments: [],
             archived_debts: [],
             currencies: [],
-            currency_rates: []
+            currency_rates: [],
+            locale_str: utils.localeStr(),
+            device: app.device
         };
     }
 });
 
-var mainView = app.views.create('.view-main');
+app.views.create('.view-main');
 
 db.transaction(function (tx) {
     tx.executeSql('CREATE TABLE IF NOT EXISTS auth (user_id, auth_token)');
@@ -136,7 +137,7 @@ function initAppData() {
             //     animate: false
             // });
 
-            service.auth.logIn({id: '1', phone: '+375291234567', auth_token: 'hdoptz', ava: 'img/ava.png'}, function () {
+            service.auth.logIn({id: utils.uuid(), phone: '', auth_token: utils.uuid(), ava: service.image.predefined().random()}, function () {
                 service.init.finish('login');
             });
         } else {
@@ -183,6 +184,7 @@ function initAppData() {
     // service.init.add(service.user.sync_w_device, [finishSyncContacts, finishSyncContacts], 'sync_contacts', ['users']);
 
     service.init.start(function () {
+        console.log('start');
         app.views.current.router.navigate('/debt/list/', {
             animate: false
         });

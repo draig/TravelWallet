@@ -52,7 +52,7 @@
                     <div class="item-title-row">
                         <div class="item-subtitle">
                             <span>{{name debtor}}</span>
-                            <span class="owe-separator">owe to</span>
+                            <span class="owe-separator">{{../locale_str.money_owe_label}}</span>
                             <span>{{name creditor}}</span></div>
                     </div>
                     <div class="item-row calculation-total justify-content-flex-start">
@@ -71,7 +71,7 @@
     <il class="generated">
         <div class="item-content">
             <div class="item-inner">
-                <div class="item-title">Spent</div>
+                <div class="item-title">{{locale_str.money_spent_label}}</div>
                 <div class="item-after">{{format_amount details.spent}}<span class="currency">{{currency ../currency_id}}</span>
                 </div>
             </div>
@@ -80,7 +80,7 @@
     <il class="generated">
         <div class="item-content">
             <div class="item-inner">
-                <div class="item-title">Pay</div>
+                <div class="item-title">{{locale_str.money_pay_label}}</div>
                 <div class="item-after">{{format_amount details.pay}}<span
                         class="currency">{{currency ../currency_id}}</span></div>
             </div>
@@ -90,9 +90,9 @@
         <div class="item-content">
             <div class="item-inner">
                 {{#if details.debtor}}
-                <div class="item-title">Should payback</div>
+                <div class="item-title">{{locale_str.money_payback_label}}</div>
                 {{else}}
-                <div class="item-title">Should receive</div>
+                <div class="item-title">{{locale_str.money_receive_label}}</div>
                 {{/if}}
                 <div class="item-after">{{format_amount details.difference}}<span class="currency">{{currency ../currency_id}}</span>
                 </div>
@@ -110,16 +110,16 @@
                         <div class="left">
                             <a href="#" class="popup-close link">
                                 <i class="icon icon-back"></i>
-                                <span class="ios-only">Back</span>
+                                <span class="ios-only">{{locale_str.back}}</span>
                             </a>
                         </div>
-                        <div class="title">New Participant</div>
+                        <div class="title">{{locale_str.new_user_page_title}}</div>
                         <div class="right">
                             <a id="participant-new-submit" href="#" class="link link-disabled">
                                 {{#if device.android}}
                                 <i class="f7-icons">check</i>
                                 {{/if}}
-                                <span class="ios-only">Done</span>
+                                <span class="ios-only">{{locale_str.done}}</span>
                             </a>
                         </div>
                     </div>
@@ -129,9 +129,9 @@
                         <ul>
                             <li class="item-content item-input">
                                 <div class="item-inner">
-                                    <div class="item-title item-label">Name</div>
+                                    <div class="item-title item-label">{{locale_str.user_name_title}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="text" name="name" required validate placeholder="John Doe">
+                                        <input type="text" name="name" required validate placeholder="{{locale_str.user_name_example}}">
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>
@@ -139,9 +139,9 @@
 
                             <li class="item-content item-input">
                                 <div class="item-inner">
-                                    <div class="item-title item-label">Phone</div>
+                                    <div class="item-title item-label">{{locale_str.phone_title}}</div>
                                     <div class="item-input-wrap">
-                                        <input type="number" required validate name="phone" placeholder="+375291234567">
+                                        <input type="number" required validate name="phone" placeholder="{{locale_str.phone_example}}">
                                         <span class="input-clear-button"></span>
                                     </div>
                                 </div>
@@ -149,7 +149,7 @@
                             <li class="item-content item-input">
                                 <div class="item-inner">
                                     <button class="button col file-button">
-                                        <span>Choose photo</span>
+                                        <span>{{locale_str.choose_photo_btn}}</span>
                                         <input type="file" accept="image/*"/>
                                     </button>
                                 </div>
@@ -157,7 +157,7 @@
                         </ul>
                     </form>
                     <div class="avatar-wrapper">
-                        <img id="avatar" src="img/andrei.png"/>
+                        <img id="avatar" src="{{avatar}}"/>
                     </div>
                 </div>
             </div>
@@ -171,6 +171,7 @@
 <script type="text/javascript" src="lib/croppie/croppie.js"></script>
 <script type="text/javascript" src="js/helpers.js"></script>
 <!-- Path to services-->
+<script type="text/javascript" src="js/localization.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
 <script type="text/javascript" src="js/service.js"></script>

@@ -5,10 +5,10 @@
                 <div class="left">
                     <a href="/debt/list/" class="back link">
                         <i class="icon icon-back"></i>
-                        <span class="ios-only">Back</span>
+                        <span class="ios-only">{{locale_str.back}}</span>
                     </a>
                 </div>
-                <div class="title">Currency Rates</div>
+                <div class="title">{{locale_str.currency_rates_page_title}}</div>
             </div>
         </div>
 
@@ -22,9 +22,9 @@
                 <table>
                     <thead>
                     <tr>
-                        <th class="label-cell">From</th>
-                        <th class="label-cell">To</th>
-                        <th class="numeric-cell">Rate</th>
+                        <th class="label-cell">{{locale_str.from_currency_header}}</th>
+                        <th class="label-cell">{{locale_str.to_currency_header}}</th>
+                        <th class="numeric-cell">{{locale_str.currency_rate_header}}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,9 +65,9 @@
                 }
             }
 
-            return {
+            return app.utils.extend({}, app.data, {
                 currencies: currencies
-            }
+            });
         },
         on: {
             pageInit: function (e, page) {

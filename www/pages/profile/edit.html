@@ -6,14 +6,17 @@
                 <div class="left">
                     <a href="#" class="back link">
                         <i class="icon icon-back"></i>
-                        <span>Back</span>
+                        <span>{{locale_str.back}}</span>
                     </a>
                 </div>
                 {{/if}}
-                <div class="title">Profile</div>
+                <div class="title">{{locale_str.profile_page_title}}</div>
                 <div class="right">
                     <a @click="create" id="user-edit-submit" href="#" class="link link-disabled">
-                        <span>Done</span>
+                        {{#if device.android}}
+                        <i class="f7-icons">check</i>
+                        {{/if}}
+                        <span class="ios-only">{{locale_str.done}}</span>
                     </a>
                 </div>
             </div>
@@ -37,9 +40,18 @@
                     </li>
                     <li class="item-content item-input">
                         <div class="item-inner">
-                            <div class="item-title item-label">Name</div>
+                            <div class="item-title item-label">{{locale_str.user_name_title}}</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="text" name="name" value="{{current_user.name}}" required validate placeholder="John Doe">
+                                <input @change="change" type="text" name="name" value="{{current_user.name}}" required validate placeholder="{{locale_str.user_name_example}}">
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input">
+                        <div class="item-inner">
+                            <div class="item-title item-label">{{locale_str.phone_title}}</div>
+                            <div class="item-input-wrap">
+                                <input @change="change" type="number" name="phone" value="{{current_user.phone}}" required validate placeholder="{{locale_str.phone_example}}">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -68,15 +80,11 @@
 
     function validate() {
         var formData = app.form.convertToData('#user-edit-form');
-        if (formData.name) {
+        if (formData.name && formData.phone) {
             $$('#user-edit-submit').removeClass('link-disabled');
         } else {
             $$('#user-edit-submit').addClass('link-disabled');
         }
-    }
-
-    function saveAvatar() {
-
     }
 
     return {
@@ -141,7 +149,7 @@
 
                 $$('#avatar').parent().css({height: height + 'px', width: width + 'px'});
                 app.data.croppie = croppie = new Croppie(document.getElementById('avatar'), {
-                    viewport: {height: height - 20, width: height - 20, type: 'square'},
+                    viewport: {height: height - 20, width: height - 20, type: 'circle'},
                     showZoomer: false
                 });
             }

@@ -5,16 +5,16 @@
                 <div class="left">
                     <a href="#" class="back link">
                         <i class="icon icon-back"></i>
-                        <span class="ios-only">Back</span>
+                        <span class="ios-only">{{locale_str.back}}</span>
                     </a>
                 </div>
-                <div class="title">Edit payment</div>
+                <div class="title">{{locale_str.edit_payment_page_title}}</div>
                 <div class="right">
                     <a @click="update" id="payment-edit-submit" href="#" class="link link-disabled">
                         {{#if device.android}}
                         <i class="f7-icons">check</i>
                         {{/if}}
-                        <span class="ios-only">Done</span>
+                        <span class="ios-only">{{locale_str.done}}</span>
                     </a>
                 </div>
             </div>
@@ -25,9 +25,9 @@
                 <ul>
                     <li class="item-content item-input">
                         <div class="item-inner">
-                            <div class="item-title item-label">Title</div>
+                            <div class="item-title item-label">{{locale_str.title}}</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="text" name="title" required validate placeholder="Payment title">
+                                <input @change="change" type="text" name="title" required validate placeholder="{{locale_str.payment_placeholder}}">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -35,9 +35,9 @@
 
                     <li class="item-content item-input">
                         <div class="item-inner">
-                            <div class="item-title item-label">Amount</div>
+                            <div class="item-title item-label">{{locale_str.payment_amount_title}}</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="number" step="0.01" name="amount" required validate placeholder="Payment amount">
+                                <input @change="change" type="number" step="0.01" name="amount" required validate placeholder="{{locale_str.payment_amount_placeholder}}">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
-                                    <div class="item-title">Currency</div>
+                                    <div class="item-title">{{locale_str.currency_title}}</div>
                                 </div>
                             </div>
                         </a>
@@ -60,7 +60,7 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup" data-close-on-select="true"
-                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} users">
+                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} {{locale_str.user_search_placeholder}}">
                             <select name="payer" @change="change" required>
                                 {{#each users}}
                                     <option value="{{user_id}}">{{name}}</option>
@@ -68,7 +68,7 @@
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
-                                    <div class="item-title">Payer</div>
+                                    <div class="item-title">{{locale_str.payer_title}}</div>
                                 </div>
                             </div>
                         </a>
@@ -76,7 +76,7 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
-                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} users">
+                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} {{locale_str.user_search_placeholder}}">
                             <select name="participant" @change="change" required multiple>
                                 {{#each users}}
                                     <option value="{{user_id}}">{{name}}</option>
@@ -84,7 +84,7 @@
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
-                                    <div class="item-title">Participants</div>
+                                    <div class="item-title">{{locale_str.participants_title}}</div>
                                 </div>
                             </div>
                         </a>
@@ -117,12 +117,11 @@
             payment = service.payment.get(this.$route.params.payment_id);
             debt = service.debt.get(payment.debt_id);
 
-            return {
+            return app.utils.extend({
                 currencies: service.currency.getByIds(debt.currency),
                 users: service.user.getByIds(debt.participant),
-                current_user: app.data.current_user,
-                device: app.device
-            };
+                current_user: app.data.current_user
+            }, app.data);
         },
         methods: {
             update: function () {

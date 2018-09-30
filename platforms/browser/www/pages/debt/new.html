@@ -5,16 +5,16 @@
                 <div class="left">
                     <a href="#" class="back link">
                         <i class="icon icon-back"></i>
-                        <span class="ios-only">Back</span>
+                        <span class="ios-only">{{locale_str.back}}</span>
                     </a>
                 </div>
-                <div class="title">New debt book</div>
+                <div class="title">{{locale_str.new_debt_page_title}}</div>
                 <div class="right">
                     <a @click="create" id="new-debt-submit" href="#" class="link link-disabled">
                         {{#if device.android }}
                         <i class="f7-icons">check</i>
                         {{/if}}
-                        <span class="ios-only">Done</span>
+                        <span class="ios-only">{{locale_str.done}}</span>
                     </a>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                         <div class="item-inner">
                             <div class="item-title item-label">Title</div>
                             <div class="item-input-wrap">
-                                <input @change="change" type="text" name="title" required validate placeholder="Debt title">
+                                <input @change="change" type="text" name="title" required validate placeholder="{{locale_str.debt_title_placeholder}}">
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
 
                     <il>
                         <a class="item-link smart-select smart-select-init smart-select-participant" data-open-in="popup"
-                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} users">
+                           data-searchbar="true" data-searchbar-placeholder="{{users.length}} {{locale_str.user_search_placeholder}}">
                             <select name="participant" @change="change" required multiple>
                                 {{#each users}}
                                 <option value="{{user_id}}">{{name}}</option>
@@ -42,7 +42,7 @@
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
-                                    <div class="item-title">Participants</div>
+                                    <div class="item-title">{{locale_str.debt_participants_title}}</div>
                                 </div>
                             </div>
                         </a>
@@ -51,7 +51,7 @@
                     <li>
                         <a class="item-link smart-select smart-select-init" data-open-in="popup"
                            data-searchbar="true"
-                           data-searchbar-placeholder="Currency search">
+                           data-searchbar-placeholder="{{locale_str.currency_search_placeholder}}">
                             <select name="currency" @change="change" required multiple>
                                 {{#each currencies}}
                                 <option value="{{this.currency_id}}">{{this.title}}</option>
@@ -59,7 +59,7 @@
                             </select>
                             <div class="item-content">
                                 <div class="item-inner">
-                                    <div class="item-title">Currency</div>
+                                    <div class="item-title">{{locale_str.currency_title}}</div>
                                 </div>
                             </div>
                         </a>
@@ -89,7 +89,7 @@
 
     return {
         data: function () {
-            return app.utils.extend({}, app.data, {device: app.device});
+            return app.data;
         },
         methods: {
             create: function () {
@@ -114,10 +114,9 @@
 
                     $$('.smart-select-page .fab').click(function () {
                         app.smartSelect.close('.smart-select-participant');
-                        app.popup.contact_new_popup.open();
 
-
-                        app.popup.contact_new_popup.once('close', function (e, popup) {
+                        var new_contact_popup = app.popup.create_new_contact_popup();
+                        new_contact_popup.once('close', function (e, popup) {
                             app.data.users.forEach(function (user) {
                                 if (!$$('.smart-select-participant option[value=":user_id"]'.replace(':user_id', user.user_id)).length) {
                                     $$('.smart-select-participant select').append(compiledTemplate(user));
@@ -126,6 +125,7 @@
 
                             app.smartSelect.open('.smart-select-participant');
                         });
+                        new_contact_popup.open();
                     });
                 });
             }

@@ -12,7 +12,7 @@
                             <div class="item-after">{{amount}} {{format_currency currency}}</div>
                         </div>
                         <div class="item-text">divide with:</div>
-                        <div class="item-subtitle">{{participant.length}} people</div>
+                        <div class="item-subtitle">{{participant.length}} {{../locale_str.people_subtitle}}</div>
                     </div>
                 </a>
             </li>
@@ -20,8 +20,9 @@
         </ul>
         {{else}}
         <div class="block empty-list text-align-center">
-            <p>You haven't payment yet</p>
-            <p>Press  <i class="icon f7-icons">add</i> button to add one</p>
+            <!--<p>You haven't payment yet</p>
+            <p>Press  <i class="icon f7-icons">add</i> button to add one</p>-->
+            {{locale_str.no_payment_msg}}
         </div>
         {{/if}}
     </div>
@@ -38,9 +39,9 @@
 
     return {
         data: function () {
-            return {
+            return app.utils.extend({}, app.data, {
                 payments: service.payment.getByDebtId(this.$route.params.debt_id)
-            }
+            });
         }
     };
 </script>

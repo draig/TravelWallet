@@ -5,7 +5,7 @@
                 <div class="left">
                     <a href="/debt/list/" class="back link">
                         <i class="icon icon-back"></i>
-                        <span class="ios-only">Back</span>
+                        <span class="ios-only">{{locale_str.back}}</span>
                     </a>
                 </div>
                 <div class="title">{{debt.title}}</div>
@@ -22,9 +22,9 @@
 
         <div class="toolbar tabbar">
             <div class="toolbar-inner">
-                <a href="./" class="tab-link" data-route-tab-id="payments">Payments</a>
-                <a href="./calculations/" class="tab-link" data-route-tab-id="calculation">Calculations</a>
-                <a href="./details/" class="tab-link" data-route-tab-id="details">Details</a>
+                <a href="./" class="tab-link" data-route-tab-id="payments">{{locale_str.payments_tab_name}}</a>
+                <a href="./calculations/" class="tab-link" data-route-tab-id="calculation">{{locale_str.calculations_tab_name}}</a>
+                <a href="./details/" class="tab-link" data-route-tab-id="details">{{locale_str.details_tab_name}}</a>
             </div>
         </div>
 
@@ -41,9 +41,9 @@
 
     return {
         data: function () {
-            return {
+            return app.utils.extend({}, app.data, {
                 debt: service.debt.get(this.$route.params.debt_id)
-            };
+            });
         }
     };
 </script>

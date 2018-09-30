@@ -11,7 +11,7 @@
                         </select>
                         <div class="item-content">
                             <div class="item-inner">
-                                <div class="item-title">Currency</div>
+                                <div class="item-title">{{locale_str.currency_title}}</div>
                             </div>
                         </div>
                     </a>
@@ -50,18 +50,19 @@
 
     function updateDebtList() {
         var currency = service.currency.get($$('[name="currency"]').val());
-        $$('.debt-list').html(compiledTemplate({
+        $$('.debt-list').html(compiledTemplate(app.utils.extend({}, app.data, {
             book: service.engine.calculate(debt.debt_id, currency.currency_id),
             currency_id: currency.currency_id
-        }));
+        })));
     }
 
     return {
         data: function () {
             debt = service.debt.get(this.$route.params.debt_id);
-            return {
+
+            return app.utils.extend({}, app.data, {
                 currencies: service.currency.getByIds(debt.currency)
-            }
+            });
         },
         methods: {
             recalculate: function () {
